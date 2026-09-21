@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mollywood & Kollywood Eye Quiz - Premium Edition by Loop</title>
+    <link rel="icon" href="../icons/LOGO.png" type="image/png">
+
+    <!-- Confetti Animation Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #070a14;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            isolation: isolate;
+            position: relative;
+        }
+
+        /* Premium animated 3D backdrop */
+        #scene3d {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            z-index: -3;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 40%, rgba(19, 28, 57, 0.6), rgba(4, 6, 14, 0.98) 75%);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(241, 196, 15, 0.07), transparent 25%),
+                radial-gradient(circle at 82% 28%, rgba(233, 69, 96, 0.10), transparent 30%),
+                radial-gradient(circle at 50% 85%, rgba(52, 152, 219, 0.07), transparent 30%);
+            mix-blend-mode: screen;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(circle at center, transparent 25%, rgba(0, 0, 0, 0.38) 100%);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            body {
+                scroll-behavior: auto;
+            }
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 850px;
+            position: relative;
+            z-index: 10;
+            margin: 30px 0;
+        }
+
+        h1 {
+            background: linear-gradient(to right, #f1c40f, #e94560);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 38px;
+            font-weight: 800;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #e94560, #c0392b);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(233, 69, 96, 0.6);
+        }
+
+        .player-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 15px 0;
+            padding: 15px 25px;
+            border-radius: 15px;
+            transition: 0.3s;
+        }
+
+        .player-row:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="text"] {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            outline: none;
+            font-size: 16px;
+            width: 45%;
+            transition: 0.3s;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input[type="text"]:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #f1c40f;
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+        }
+
+        .category-selection {
+            margin-top: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .category-selection label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #cbd5e1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-selection input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #e94560;
+        }
+
+        .key-btn {
+            background: linear-gradient(135deg, #f39c12, #d35400);
+            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .key-btn:hover {
+            box-shadow: 0 12px 25px rgba(243, 156, 18, 0.6);
+        }
+
+        .key-btn.listening {
+            background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(46, 204, 113, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+            }
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            50% {
+                transform: translateX(10px);
+            }
+
+            75% {
+                transform: translateX(-10px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .shake-effect {
+            animation: shake 0.4s ease-in-out;
+            border-color: #e74c3c !important;
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.8) !important;
+        }
+
+        #splash-screen {
+            font-size: 50px;
+            font-weight: 800;
+            color: #f1c40f;
+            letter-spacing: 2px;
+        }
+
+        #countdown-number {
+            font-size: 120px;
+            font-weight: 800;
+            color: #e94560;
+            margin-top: 20px;
+            text-shadow: 0 10px 30px rgba(233, 69, 96, 0.6);
+        }
+
+        #game-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #scoreboard {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .score-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .score-card span {
+            color: #f1c40f;
+            font-size: 20px;
+            font-weight: 800;
+            margin-left: 8px;
+        }
+
+        .score-card.active {
+            border-color: #f1c40f;
+            background: rgba(241, 196, 15, 0.1);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+        }
+
+        .eye-box {
+            margin: 15px auto;
+            border: 4px solid #f1c40f;
+            border-radius: 15px;
+            background-color: #000;
+            max-width: 450px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3);
+        }
+
+        .eye-box img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .eye-box.correct {
+            border-color: #2ecc71;
+            box-shadow: 0 10px 40px rgba(46, 204, 113, 0.6);
+        }
+
+        #buzzer-message {
+            font-size: 24px;
+            color: #f1c40f;
+            margin-top: 20px;
+            font-weight: 600;
+            height: 35px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        #timer-display {
+            font-size: 28px;
+            color: #e74c3c;
+            font-weight: 800;
+            margin-top: 10px;
+            height: 35px;
+            text-shadow: 0 2px 10px rgba(231, 76, 60, 0.5);
+        }
+
+        #answer-section {
+            margin-top: 25px;
+            display: none;
+            width: 100%;
+        }
+
+        #answer-section input {
+            width: 60%;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 20px;
+            text-transform: capitalize;
+        }
+
+        #submit-btn {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        #submit-btn:hover {
+            box-shadow: 0 12px 25px rgba(46, 204, 113, 0.6);
+        }
+
+        #next-timer-display {
+            font-size: 20px;
+            color: #3498db;
+            margin-top: 20px;
+            font-weight: 600;
+            height: 30px;
+            letter-spacing: 1px;
+        }
+
+        #winner-board {
+            margin-top: 30px;
+            text-align: left;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .winner-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .winner-row:last-child {
+            border-bottom: none;
+        }
+
+        .winner-row:first-child {
+            font-size: 35px;
+            color: #f1c40f;
+            font-weight: 800;
+            border-bottom: 2px solid rgba(241, 196, 15, 0.3);
+            text-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+        }
+
+        .winner-row span:last-child {
+            color: #2ecc71;
+        }
+
+        .end-btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .instagram-credit {
+            position: fixed;
+            right: 18px;
+            bottom: 16px;
+            z-index: 100;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 13px;
+            text-decoration: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .instagram-credit img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .instagram-credit:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 16px 0 72px;
+            }
+
+            .container {
+                width: min(94%, 850px);
+                padding: clamp(24px, 4vw, 40px);
+                margin: 16px auto;
+            }
+
+            .player-row {
+                gap: 12px;
+            }
+
+            .player-row input[type="text"],
+            .player-row button {
+                min-width: 0;
+            }
+
+            .eye-box {
+                width: min(100%, 450px);
+            }
+
+            #buzzer-message {
+                height: auto;
+                min-height: 35px;
+                font-size: clamp(17px, 3vw, 24px);
+            }
+
+            #winner-board {
+                padding: clamp(16px, 3vw, 25px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                align-items: flex-start;
+                padding: 10px 0 58px;
+            }
+
+            .container {
+                width: calc(100% - 20px);
+                padding: 22px 16px;
+                margin: 110px auto 20px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: clamp(24px, 8vw, 38px);
+                letter-spacing: 1px;
+                line-height: 1.2;
+            }
+
+            #page2 h1,
+            #page-end h1 {
+                font-size: clamp(24px, 8vw, 38px) !important;
+            }
+
+            .btn-group {
+                gap: 10px;
+                margin-top: 16px;
+            }
+
+            button {
+                width: 100%;
+                max-width: 360px;
+                min-height: 46px;
+                padding: 11px 16px;
+                font-size: 14px;
+                letter-spacing: 0.5px;
+            }
+
+            .player-row {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 12px;
+                margin: 12px 0;
+            }
+
+            .player-row input[type="text"],
+            .player-row button {
+                width: 100%;
+            }
+
+            .category-selection {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 14px;
+            }
+
+            .category-selection label {
+                font-size: 15px;
+            }
+
+            #splash-screen {
+                font-size: clamp(30px, 11vw, 50px);
+            }
+
+            #countdown-number {
+                font-size: clamp(78px, 28vw, 120px);
+            }
+
+            #scoreboard {
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+
+            .score-card {
+                width: 100%;
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+
+            .score-card span {
+                font-size: 18px;
+            }
+
+            .score-card.active {
+                transform: scale(1.02);
+            }
+
+            .eye-box {
+                width: 100%;
+                border-width: 3px;
+            }
+
+            #timer-display {
+                font-size: 23px;
+            }
+
+            #answer-section input {
+                width: 100%;
+                font-size: 18px;
+            }
+
+            #answer-section button {
+                width: 100%;
+            }
+
+            #next-timer-display {
+                font-size: 17px;
+            }
+
+            #winner-board {
+                margin-top: 20px;
+                padding: 12px;
+            }
+
+            .winner-row {
+                padding: 12px 6px;
+                font-size: 16px;
+                gap: 10px;
+            }
+
+            .winner-row:first-child {
+                font-size: 23px;
+            }
+
+            .end-btn-group {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                margin-top: 25px;
+            }
+
+            .instagram-credit {
+                right: 10px;
+                bottom: 10px;
+                font-size: 11px;
+            }
+
+            .instagram-credit img {
+                width: 24px;
+                height: 24px;
+            }
+
+            .brand-mark {
+                top: 12px;
+                width: 78px;
+                height: 78px;
+                border-radius: 15px;
+            }
+        }
+
+
+        .brand-mark {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, .2);
+            border-radius: 19px;
+            background: rgba(255, 255, 255, .06);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 10px 35px #0006;
+            z-index: 1000;
+            transition: .4s;
+        }
+
+        .brand-mark:hover {
+            transform: translateX(-100%) scale(1.1) translateY(10px);
+            border-color: var(--cyan);
+        }
+
+        .brand-mark img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain
+        }
+
+        .brand-mark img:hover {
+            transform: rotate(0) scale(1.5);
+            border-color: var(--cyan)
+        }
+
+        /* =========================================================
+           RESPONSIVE LAYOUT + BRAND SAFE AREA
+           Keeps the logo in a dedicated top area and prevents
+           content from sliding underneath it on any screen size.
+           ========================================================= */
+        :root {
+            --brand-size: clamp(68px, 8vw, 100px);
+            --brand-top: clamp(12px, 2vw, 22px);
+            --brand-gap: clamp(18px, 3vw, 34px);
+            --content-top: calc(var(--brand-top) + var(--brand-size) + var(--brand-gap));
+            --page-gutter: clamp(10px, 3vw, 40px);
+        }
+
+        html {
+            min-width: 320px;
+            background: #070a14;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100svh;
+            padding: var(--content-top) var(--page-gutter) 52px;
+            align-items: flex-start;
+        }
+
+        /* Move the 3D canvas slightly below the very top area so the
+           logo has a clean visual zone of its own. */
+        #scene3d {
+            inset: 0;
+            transform: translateY(clamp(10px, 1.8vw, 28px));
+        }
+
+        .container {
+            width: min(100%, 1100px);
+            max-width: 1100px;
+            margin: 0 auto 28px;
+            padding: clamp(22px, 4vw, 44px);
+            flex-shrink: 0;
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: clamp(14px, 2vw, 22px);
+            font-size: clamp(28px, 3.6vw, 42px);
+            line-height: 1.18;
+            letter-spacing: clamp(1px, 0.35vw, 3px);
+            overflow-wrap: anywhere;
+        }
+
+        .btn-group,
+        .end-btn-group {
+            width: 100%;
+            gap: clamp(10px, 1.8vw, 20px);
+        }
+
+        .btn-group button,
+        .end-btn-group button {
+            flex: 0 1 auto;
+            min-width: 150px;
+        }
+
+        button {
+            min-height: 46px;
+            padding: 12px clamp(18px, 3vw, 35px);
+            font-size: clamp(14px, 1.5vw, 16px);
+        }
+
+        .player-row {
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: clamp(12px, 2vw, 18px) clamp(14px, 2.5vw, 25px);
+        }
+
+        .player-row input[type="text"] {
+            flex: 1 1 280px;
+            width: auto;
+            min-width: 0;
+        }
+
+        .player-row button {
+            flex: 1 1 220px;
+            min-width: 0;
+        }
+
+        .category-selection {
+            flex-wrap: wrap;
+            gap: clamp(12px, 3vw, 30px);
+        }
+
+        #game-layout {
+            width: 100%;
+        }
+
+        #scoreboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+            gap: 10px;
+            width: 100%;
+            margin-bottom: clamp(16px, 2.5vw, 25px);
+        }
+
+        .score-card {
+            width: 100%;
+            min-width: 0;
+            padding: 11px clamp(12px, 2vw, 25px);
+            font-size: clamp(13px, 1.35vw, 16px);
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+        .score-card span {
+            font-size: clamp(17px, 1.8vw, 20px);
+        }
+
+        #question-title {
+            width: 100%;
+            margin-top: 4px;
+            margin-bottom: 8px !important;
+            font-size: clamp(18px, 2.2vw, 26px);
+            line-height: 1.35;
+        }
+
+        .eye-box {
+            width: min(100%, 520px);
+            max-width: 520px;
+            margin: clamp(12px, 2vw, 18px) auto;
+        }
+
+        .eye-box img {
+            max-width: 100%;
+            max-height: min(58svh, 560px);
+            height: auto;
+            object-fit: contain;
+        }
+
+        #buzzer-message {
+            width: 100%;
+            height: auto;
+            min-height: 35px;
+            margin-top: clamp(14px, 2vw, 20px);
+            font-size: clamp(17px, 2.2vw, 24px);
+            line-height: 1.35;
+        }
+
+        #timer-display {
+            height: auto;
+            min-height: 35px;
+            font-size: clamp(21px, 2.5vw, 28px);
+        }
+
+        #answer-section {
+            margin-top: clamp(18px, 2.5vw, 25px);
+        }
+
+        #answer-section input {
+            width: min(100%, 600px);
+            max-width: 100%;
+            margin-bottom: 16px;
+        }
+
+        #next-timer-display {
+            height: auto;
+            min-height: 30px;
+            font-size: clamp(16px, 1.9vw, 20px);
+            line-height: 1.4;
+        }
+
+        #winner-board {
+            width: 100%;
+            padding: clamp(14px, 2.5vw, 25px);
+        }
+
+        .winner-row {
+            gap: 16px;
+            font-size: clamp(17px, 2vw, 22px);
+        }
+
+        .winner-row:first-child {
+            font-size: clamp(24px, 3vw, 35px);
+        }
+
+        .instagram-credit {
+            right: max(10px, var(--page-gutter));
+            bottom: 12px;
+            max-width: calc(100vw - 20px);
+        }
+
+        .brand-mark {
+            top: var(--brand-top);
+            left: 50%;
+            width: var(--brand-size);
+            height: var(--brand-size);
+            border-radius: clamp(14px, 1.7vw, 19px);
+            transform: translateX(-50%);
+        }
+
+        .brand-mark:hover {
+            transform: translateX(-50%) scale(1.1);
+            border-color: var(--cyan);
+        }
+
+        .brand-mark img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain
+        }
+
+        .brand-mark img:hover {
+            transform: rotate(0) scale(1.5);
+            border-color: var(--cyan)
+        }
+
+        /* Laptop / desktop */
+        @media (min-width: 901px) {
+            .container {
+                min-height: auto;
+            }
+
+            .btn-group button {
+                min-width: 155px;
+            }
+        }
+
+        /* Tablet */
+        @media (max-width: 900px) {
+            :root {
+                --brand-size: clamp(68px, 11vw, 88px);
+                --brand-gap: clamp(16px, 3.5vw, 28px);
+            }
+
+            .container {
+                width: 100%;
+                padding: clamp(20px, 4vw, 34px);
+            }
+
+            .player-row input[type="text"],
+            .player-row button {
+                flex-basis: calc(50% - 6px);
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            :root {
+                --brand-size: 72px;
+                --brand-top: 10px;
+                --brand-gap: 18px;
+                --page-gutter: 10px;
+            }
+
+            body {
+                padding-top: var(--content-top);
+                padding-bottom: 62px;
+            }
+
+            .container {
+                width: 100%;
+                margin-bottom: 18px;
+                padding: 20px 14px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: clamp(25px, 8vw, 34px);
+                line-height: 1.2;
+                letter-spacing: 1px;
+            }
+
+            .btn-group button,
+            .end-btn-group button {
+                width: 100%;
+                max-width: none;
+                min-width: 0;
+            }
+
+            .player-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .player-row input[type="text"],
+            .player-row button {
+                flex: 1 1 auto;
+                width: 100%;
+            }
+
+            .category-selection {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 11px;
+                padding: 13px;
+            }
+
+            .category-selection label {
+                font-size: 15px;
+            }
+
+            #scoreboard {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .score-card.active {
+                transform: scale(1.015);
+            }
+
+            .eye-box {
+                width: 100%;
+                max-width: 100%;
+                border-width: 3px;
+            }
+
+            .eye-box img {
+                max-height: min(54svh, 420px);
+            }
+
+            #answer-section input {
+                width: 100%;
+                font-size: 18px;
+            }
+
+            #answer-section button {
+                width: 100%;
+            }
+
+            .end-btn-group {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                margin-top: 25px;
+            }
+
+            .instagram-credit {
+                left: 10px;
+                right: auto;
+                justify-content: center;
+                width: calc(100% - 20px);
+                font-size: 11px;
+            }
+        }
+
+        /* Very short screens (landscape phones / some tablets). */
+        @media (max-height: 650px) and (orientation: landscape) {
+            :root {
+                --brand-size: 60px;
+                --brand-top: 8px;
+                --brand-gap: 12px;
+            }
+
+            body {
+                padding-bottom: 46px;
+            }
+
+            .container {
+                padding: 16px 20px;
+            }
+
+            .eye-box img {
+                max-height: 48svh;
+            }
+        }
+
+        /* Large TV / wide desktop: keep the UI centered without becoming oversized. */
+        @media (min-width: 1600px) {
+            :root {
+                --page-gutter: 60px;
+                --brand-size: 104px;
+                --brand-gap: 34px;
+            }
+
+            .container {
+                max-width: 1180px;
+                padding: 48px;
+            }
+
+            .eye-box {
+                max-width: 560px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="brand-mark">
+        <a href="https://www.instagram.com/akshaye_e_/" target="_blank" rel="noopener noreferrer">
+            <img src="../icons/logo.png" alt=""
+                onerror="this.style.display='none'; document.querySelector('.fallback-mark').style.display='grid'" />
+        </a>
+        <span class="fallback-mark">
+            ◈
+        </span>
+    </div>
+
+
+    <!-- WebGL 3D background canvas -->
+    <canvas id="scene3d" aria-hidden="true"></canvas>
+
+    <!-- PAGE 1: Intro -->
+    <div id="page1" class="container">
+        <h1>🎬Mollywood & Kollywood🎬</h1>
+        <p style="font-size: 18px; color: #cbd5e1; font-weight: 400; margin-bottom: 30px;">How many people are playing?
+        </p>
+        <div class="btn-group">
+            <button onclick="setupPlayers(1)">1 Player</button>
+            <button onclick="setupPlayers(2)">2 Players</button>
+            <button onclick="setupPlayers(3)">3 Players</button>
+            <button onclick="setupPlayers(4)">4 Players</button>
+            <button onclick="setupPlayers(5)">5 Players</button>
+            <button onclick="setupPlayers(6)">6 Players</button>
+        </div>
+    </div>
+
+    <!-- PAGE 2: Setup -->
+    <div id="page2" class="container" style="display: none;">
+        <h1 style="font-size: 32px;">Player Setup</h1>
+        <p style="color: #cbd5e1; margin-bottom: 15px;">Enter player names and set their buzzers!</p>
+
+        <div id="players-list"></div>
+
+        <!-- Category Selection -->
+        <div class="category-selection">
+            <label><input type="checkbox" id="mollywood-cb" checked> Mollywood</label>
+            <label><input type="checkbox" id="kollywood-cb" checked> Kollywood</label>
+        </div>
+
+        <button
+            style="margin-top: 30px; background: linear-gradient(135deg, #2ecc71, #27ae60); box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);"
+            onclick="startSplash()">Ready? Let's Go! 🚀</button>
+    </div>
+
+    <!-- PAGE 3: Splash Countdown -->
+    <div id="page-splash" class="container"
+        style="display: none; text-align: center; border: none; background: transparent; box-shadow: none;">
+        <div id="splash-screen">GET READY</div>
+        <div id="countdown-number"></div>
+    </div>
+
+    <!-- PAGE 4: Main Game -->
+    <div id="page-game" class="container" style="display: none;">
+        <div id="game-layout">
+            <div id="scoreboard"></div>
+
+            <h2 id="question-title" style="color: #cbd5e1; font-weight: 600; letter-spacing: 1px; margin-bottom: 5px;">
+                Who is this star? 🕵️</h2>
+
+            <div id="image-container" class="eye-box">
+                <img id="actor-image" src="" alt="Actor">
+            </div>
+
+            <div id="buzzer-message">Get ready to buzz!</div>
+            <div id="timer-display" style="display: none;"></div>
+
+            <div id="answer-section">
+                <input type="text" id="guess-input" placeholder="Enter actor's name..." autocomplete="off">
+                <br>
+                <button id="submit-btn" onclick="checkAnswer()">Submit Answer ✔️</button>
+            </div>
+            <div id="next-timer-display" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: Game Over -->
+    <div id="page-end" class="container" style="display: none;">
+        <h1 style="font-size: 55px; margin-bottom: 10px;">🏆 Game Over! 🏆</h1>
+        <p style="color: #cbd5e1; font-size: 18px;">Here are the final scores:</p>
+        <div id="winner-board"></div>
+
+        <div class="end-btn-group">
+            <button onclick="restartGame()">Play Again 🔄</button>
+            <button style="background: linear-gradient(135deg, #f39c12, #d35400);" onclick="location.reload()">Main Menu
+                🏠</button>
+        </div>
+    </div>
+
+    <a class="instagram-credit" href="https://www.instagram.com/akshaye_e_/" target="_blank" rel="noopener noreferrer"
+        aria-label="Powered by Instagram profile">
+        <span>Powered by ➔ </span>
+        <img src="../icons/insta.png" alt="Instagram">
+    </a>
+    <script>
+        // ==========================================
+        // ⚙️ GAME SETTINGS
+        // ==========================================
+        const TOTAL_ROUNDS = 20;
+        const ANSWER_TIME_LIMIT = 25;
+        const NEXT_ROUND_DELAY = 5;     // അടുത്ത റൗണ്ട് വരാൻ 5 സെക്കൻഡ് മതിയാകും (വേണമെങ്കിൽ മാറ്റാം)
+        const PLUS_MARK = 10;
+        const MINUS_MARK = 7;
+        const MAX_IMAGES_IN_FOLDER = 20;
+        // ==========================================
+
+        const soundBuzzer = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+        const soundClap = new Audio('https://actions.google.com/sounds/v1/crowds/light_applause.ogg');
+        const soundWrong = new Audio('https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg');
+        const soundCheer = new Audio('https://actions.google.com/sounds/v1/crowds/crowd_cheering.ogg');
+
+        const soundHeartbeat = new Audio('mollywood_faces/heartbeat.mp3');
+        soundHeartbeat.loop = true;
+        soundHeartbeat.volume = 1.0;
+
+        function safePlay(audio) {
+            try {
+                audio.currentTime = 0;
+                let playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => { });
+                }
+            } catch (e) { }
+        }
+
+        const defaultKeys = ['Space', 'ShiftRight', 'Enter', 'Tab', 'ShiftLeft', 'Backspace'];
+        const displayKeys = ['Space', 'Right Shift', 'Enter', 'Tab', 'Left Shift', 'Backspace'];
+
+        let playersData = [];
+        let currentlyListening = null;
+
+        let gameActive = false;
+        let currentActorIndex = 0;
+        let activePlayer = null;
+
+        let answerTimer = null;
+        let timeLeft = ANSWER_TIME_LIMIT;
+
+        let nextRoundTimer = null;
+        let nextTimeLeft = NEXT_ROUND_DELAY;
+
+        let quizData = [];
+
+        // Mollywood Database
+        const mollywoodData = [
+            { folder: '../database/mollywood_faces/Aishwarya_Lekshmi/', answer: 'aishwarya lekshmi', aliases: ['aishu', 'aishwarya', 'lekshmi'] },
+            { folder: '../database/mollywood_faces/Asif_Ali/', answer: 'asif ali', aliases: ['asif', 'asikka', 'asifali'] },
+            { folder: '../database/mollywood_faces/Dulquer_Salmaan/', answer: 'dulquer salmaan', aliases: ['dq', 'dulquer', 'kunjikka', 'salmaan'] },
+            { folder: '../database/mollywood_faces/Fahadh_Faasil/', answer: 'fahadh faasil', aliases: ['fafa', 'fahad', 'fahadh', 'faasil'] },
+            { folder: '../database/mollywood_faces/Jayasurya/', answer: 'jayasurya', aliases: ['jayan', 'jayasuriya', 'surya'] },
+            { folder: '../database/mollywood_faces/Kunchacko_Boban/', answer: 'kunchacko boban', aliases: ['chackochan', 'kunchacko', 'boban', 'chakochan'] },
+            { folder: '../database/mollywood_faces/Mammootty/', answer: 'mammootty', aliases: ['mammookka', 'mamuka', 'mammooty', 'mamooty', 'mammotty'] },
+            { folder: '../database/mollywood_faces/Manju_Warrier/', answer: 'manju warrier', aliases: ['manju', 'warrier', 'variyer'] },
+            { folder: '../database/mollywood_faces/Mohanlal/', answer: 'mohanlal', aliases: ['lalettan', 'lalu', 'mohan lal', 'lal'] },
+            { folder: '../database/mollywood_faces/Nazriya_Nazim/', answer: 'nazriya nazim', aliases: ['nazriya', 'nazim'] },
+            { folder: '../database/mollywood_faces/Nivin_Pauly/', answer: 'nivin pauly', aliases: ['nivin', 'pauly', 'poli'] },
+            { folder: '../database/mollywood_faces/Parvathy_Thiruvothu/', answer: 'parvathy thiruvothu', aliases: ['parvathy', 'thiruvothu', 'parvathi'] },
+            { folder: '../database/mollywood_faces/Prithviraj_Sukumaran/', answer: 'prithviraj sukumaran', aliases: ['rajuettan', 'prithviraj', 'raju', 'prithvi', 'sukumaran'] },
+            { folder: '../database/mollywood_faces/Shobana/', answer: 'shobana', aliases: ['shobhana'] },
+            { folder: '../database/mollywood_faces/Tovino_Thomas/', answer: 'tovino thomas', aliases: ['tovino', 'tovi', 'thomas'] },
+            { folder: '../database/mollywood_faces/Aparna_Balamurali/', answer: 'aparna balamurali', aliases: ['aparna', 'balamurali'] },
+            { folder: '../database/mollywood_faces/Anna_Ben/', answer: 'anna ben', aliases: ['anna', 'ben'] },
+            { folder: '../database/mollywood_faces/Mamitha_Baiju/', answer: 'mamitha baiju', aliases: ['mamitha', 'baiju'] },
+            { folder: '../database/mollywood_faces/Rajisha_Vijayan/', answer: 'rajisha vijayan', aliases: ['rajisha', 'vijayan'] },
+            { folder: '../database/mollywood_faces/Nimisha_Sajayan/', answer: 'nimisha sajayan', aliases: ['nimisha', 'sajayan'] },
+            { folder: '../database/mollywood_faces/Suraj_Venjaramoodu/', answer: 'suraj venjaramoodu', aliases: ['suraj', 'venjaramoodu', 'venjaramood'] },
+            { folder: '../database/mollywood_faces/Indrajith_Sukumaran/', answer: 'indrajith sukumaran', aliases: ['indrajith', 'indra', 'sukumaran'] },
+            { folder: '../database/mollywood_faces/Shane_Nigam/', answer: 'shane nigam', aliases: ['shane', 'nigam'] },
+            { folder: '../database/mollywood_faces/Soubin_Shahir/', answer: 'soubin shahir', aliases: ['soubin', 'shahir', 'saubin'] },
+            { folder: '../database/mollywood_faces/Unni_Mukundan/', answer: 'unni mukundan', aliases: ['unni', 'mukundan', 'unnimukundan'] },
+            { folder: '../database/mollywood_faces/Biju_Menon/', answer: 'biju menon', aliases: ['biju', 'menon'] },
+            { folder: '../database/mollywood_faces/Joju_George/', answer: 'joju george', aliases: ['joju', 'george'] },
+            { folder: '../database/mollywood_faces/Vinayakan/', answer: 'vinayakan', aliases: ['vinayakan'] },
+            { folder: '../database/mollywood_faces/Roshan_Mathew/', answer: 'roshan mathew', aliases: ['roshan', 'mathew'] },
+            { folder: '../database/mollywood_faces/Arjun_Ashokan/', answer: 'arjun ashokan', aliases: ['arjun', 'ashokan'] },
+            { folder: '../database/mollywood_faces/Sreenivasan/', answer: 'sreenivasan', aliases: ['sreeni', 'sreenivasan'] },
+            { folder: '../database/mollywood_faces/Siddique/', answer: 'siddique', aliases: ['siddik', 'siddiq'] },
+            { folder: '../database/mollywood_faces/Mukesh/', answer: 'mukesh', aliases: ['mukesh'] },
+            { folder: '../database/mollywood_faces/Saiju_Kurup/', answer: 'saiju kurup', aliases: ['saiju', 'kurup'] },
+            { folder: '../database/mollywood_faces/Jagadish/', answer: 'jagadish', aliases: ['jagadeesh', 'jagadish'] },
+            { folder: '../database/mollywood_faces/Kalabhavan_Shajohn/', answer: 'kalabhavan shajohn', aliases: ['shajohn', 'kalabhavan'] },
+            { folder: '../database/mollywood_faces/Hareesh_Peradi/', answer: 'hareesh peradi', aliases: ['hareesh', 'peradi'] },
+            { folder: '../database/mollywood_faces/Sharaf_U_Dheen/', answer: 'sharaf u dheen', aliases: ['sharafudheen', 'sharaf'] },
+            { folder: '../database/mollywood_faces/Lukman_Avaran/', answer: 'lukman avaran', aliases: ['lukman', 'avaran'] },
+            { folder: '../database/mollywood_faces/Mathew_Thomas/', answer: 'mathew thomas', aliases: ['mathew', 'thomas'] },
+            { folder: '../database/mollywood_faces/Dhyan_Sreenivasan/', answer: 'dhyan sreenivasan', aliases: ['dhyan', 'sreenivasan'] },
+            { folder: '../database/mollywood_faces/Siju_Wilson/', answer: 'siju wilson', aliases: ['siju', 'wilson'] },
+            { folder: '../database/mollywood_faces/Sudheer_Karamana/', answer: 'sudheer karamana', aliases: ['sudheer', 'karamana'] },
+            { folder: '../database/mollywood_faces/Jaffer_Idukki/', answer: 'jaffer idukki', aliases: ['jaffer', 'idukki', 'jaffar'] },
+            { folder: '../database/mollywood_faces/Anaswara_Rajan/', answer: 'anaswara rajan', aliases: ['anaswara', 'rajan'] },
+            { folder: '../database/mollywood_faces/Kalyani_Priyadarshan/', answer: 'kalyani priyadarshan', aliases: ['kalyani', 'priyadarshan'] },
+            { folder: '../database/mollywood_faces/Nikhila_Vimal/', answer: 'nikhila vimal', aliases: ['nikhila', 'vimal'] },
+            { folder: '../database/mollywood_faces/Grace_Antony/', answer: 'grace antony', aliases: ['grace', 'antony'] },
+            { folder: '../database/mollywood_faces/Anu_Sithara/', answer: 'anu sithara', aliases: ['anu', 'sithara'] },
+            { folder: '../database/mollywood_faces/Meera_Jasmine/', answer: 'meera jasmine', aliases: ['meera', 'jasmine'] },
+            { folder: '../database/mollywood_faces/Bhavana/', answer: 'bhavana', aliases: ['bhavana'] },
+            { folder: '../database/mollywood_faces/Keerthy_Suresh/', answer: 'keerthy suresh', aliases: ['keerthy', 'keerthi', 'suresh'] },
+            { folder: '../database/mollywood_faces/Malavika_Mohanan/', answer: 'malavika mohanan', aliases: ['malavika', 'mohanan'] },
+            { folder: '../database/mollywood_faces/Priya_Prakash_Varrier/', answer: 'priya prakash varrier', aliases: ['priya', 'varrier', 'priya prakash'] },
+            { folder: '../database/mollywood_faces/Darshana_Rajendran/', answer: 'darshana rajendran', aliases: ['darshana', 'rajendran'] },
+            { folder: '../database/mollywood_faces/Ahaana_Krishna/', answer: 'ahaana krishna', aliases: ['ahaana', 'ahana', 'krishna'] },
+            { folder: '../database/mollywood_faces/Saniya_Iyappan/', answer: 'saniya iyappan', aliases: ['saniya', 'iyappan'] },
+            { folder: '../database/mollywood_faces/Samyuktha_Menon/', answer: 'samyuktha menon', aliases: ['samyuktha', 'menon'] },
+            { folder: '../database/mollywood_faces/Aparna_Das/', answer: 'aparna das', aliases: ['aparna', 'das'] },
+            { folder: '../database/mollywood_faces/Durga_Krishna/', answer: 'durga krishna', aliases: ['durga', 'krishna'] },
+            { folder: '../database/mollywood_faces/Noorin_Shereef/', answer: 'noorin shereef', aliases: ['noorin', 'shereef'] },
+            { folder: '../database/mollywood_faces/Amala_Paul/', answer: 'amala paul', aliases: ['amala', 'paul'] },
+            { folder: '../database/mollywood_faces/Miya_George/', answer: 'miya george', aliases: ['miya', 'george'] },
+            { folder: '../database/mollywood_faces/Prayaga_Martin/', answer: 'prayaga martin', aliases: ['prayaga', 'martin'] },
+            { folder: '../database/mollywood_faces/Rima_Kallingal/', answer: 'rima kallingal', aliases: ['rima', 'kallingal'] },
+            { folder: '../database/mollywood_faces/Nyla_Usha/', answer: 'nyla usha', aliases: ['nyla', 'usha'] },
+            { folder: '../database/mollywood_faces/Anarkali_Marikar/', answer: 'anarkali marikar', aliases: ['anarkali', 'marikar'] },
+            { folder: '../database/mollywood_faces/Bhama/', answer: 'bhama', aliases: ['bhama'] },
+            { folder: '../database/mollywood_faces/Devika_Sanjay/', answer: 'devika sanjay', aliases: ['devika', 'sanjay'] },
+            { folder: '../database/mollywood_faces/Esther_Anil/', answer: 'esther anil', aliases: ['esther', 'anil'] },
+            { folder: '../database/mollywood_faces/Kavya_Madhavan/', answer: 'kavya madhavan', aliases: ['kavya', 'madhavan'] },
+            { folder: '../database/mollywood_faces/Mahima_Nambiar/', answer: 'mahima nambiar', aliases: ['mahima', 'nambiar'] },
+            { folder: '../database/mollywood_faces/Manasa_Radhakrishnan/', answer: 'manasa radhakrishnan', aliases: ['manasa', 'radhakrishnan'] },
+            { folder: '../database/mollywood_faces/Meenakshi_Raveendran/', answer: 'meenakshi raveendran', aliases: ['meenakshi', 'raveendran'] },
+            { folder: '../database/mollywood_faces/Mythili/', answer: 'mythili', aliases: ['mythili'] },
+            { folder: '../database/mollywood_faces/Namitha_Pramod/', answer: 'namitha pramod', aliases: ['namitha', 'pramod'] },
+            { folder: '../database/mollywood_faces/Nandana_Varma/', answer: 'nandana varma', aliases: ['nandana', 'varma'] },
+            { folder: '../database/mollywood_faces/Navya_Nair/', answer: 'navya nair', aliases: ['navya', 'nair'] },
+            { folder: '../database/mollywood_faces/Niranjana_Anoop/', answer: 'niranjana anoop', aliases: ['niranjana', 'anoop'] },
+            { folder: '../database/mollywood_faces/Reba_Monica_John/', answer: 'reba monica john', aliases: ['reba', 'monica', 'john'] },
+            { folder: '../database/mollywood_faces/Remya_Nambeesan/', answer: 'remya nambeesan', aliases: ['remya', 'nambeesan'] },
+            { folder: '../database/mollywood_faces/Roma_Asrani/', answer: 'roma asrani', aliases: ['roma', 'asrani'] },
+            { folder: '../database/mollywood_faces/Sanusha_Santhosh/', answer: 'sanusha santhosh', aliases: ['sanusha', 'santhosh'] },
+            { folder: '../database/mollywood_faces/Veena_Nandakumar/', answer: 'veena nandakumar', aliases: ['veena', 'nandakumar'] },
+        ];
+
+        // Kollywood Database
+        const kollywoodData = [
+            { folder: '../database/Kollywood_faces/Rajinikanth/', answer: 'rajinikanth', aliases: ['rajini', 'thalaivar'] },
+            { folder: '../database/Kollywood_faces/Kamal_Haasan/', answer: 'kamal haasan', aliases: ['kamal', 'kamalhasan'] },
+            { folder: '../database/Kollywood_faces/Vijay/', answer: 'vijay', aliases: ['thalapathy'] },
+            { folder: '../database/Kollywood_faces/Ajith_Kumar/', answer: 'ajith kumar', aliases: ['ajith', 'thala'] },
+            { folder: '../database/Kollywood_faces/Suriya/', answer: 'suriya', aliases: ['surya'] },
+            { folder: '../database/Kollywood_faces/Karthi/', answer: 'karthi', aliases: ['karthi'] },
+            { folder: '../database/Kollywood_faces/Vikram/', answer: 'vikram', aliases: ['chiyaan'] },
+            { folder: '../database/Kollywood_faces/Sivakarthikeyan/', answer: 'sivakarthikeyan', aliases: ['siva', 'sk'] },
+            { folder: '../database/Kollywood_faces/Dhanush/', answer: 'dhanush', aliases: ['dhanush'] },
+            { folder: '../database/Kollywood_faces/Jayam_Ravi/', answer: 'jayam ravi', aliases: ['ravi'] },
+            { folder: '../database/Kollywood_faces/Vijay_Sethupathi/', answer: 'vijay sethupathi', aliases: ['vjs', 'sethupathi'] },
+            { folder: '../database/Kollywood_faces/Vishal/', answer: 'vishal', aliases: ['vishal'] },
+            { folder: '../database/Kollywood_faces/Trisha_Krishnan/', answer: 'trisha krishnan', aliases: ['trisha'] },
+            { folder: '../database/Kollywood_faces/Nayanthara/', answer: 'nayanthara', aliases: ['nines'] },
+            { folder: '../database/Kollywood_faces/Sai_Pallavi/', answer: 'sai pallavi', aliases: ['pallavi'] },
+            { folder: '../database/Kollywood_faces/Jyothika/', answer: 'jyothika', aliases: ['jo'] },
+            { folder: '../database/Kollywood_faces/Hansika_Motwani/', answer: 'hansika motwani', aliases: ['hansika'] },
+            { folder: '../database/Kollywood_faces/Tamannaah_Bhatia/', answer: 'tamannaah bhatia', aliases: ['tamanna', 'tamannaah'] },
+            { folder: '../database/Kollywood_faces/Anushka_Shetty/', answer: 'anushka shetty', aliases: ['anushka'] },
+            { folder: '../database/Kollywood_faces/Rashmika_Mandanna/', answer: 'rashmika mandanna', aliases: ['rashmika'] },
+            { folder: '../database/Kollywood_faces/Pooja_Hegde/', answer: 'pooja hegde', aliases: ['pooja'] },
+            { folder: '../database/Kollywood_faces/Priyanka_Mohan/', answer: 'priyanka mohan', aliases: ['priyanka'] },
+            { folder: '../database/Kollywood_faces/Aishwarya_Rajesh/', answer: 'aishwarya rajesh', aliases: ['aishwarya'] },
+            { folder: '../database/Kollywood_faces/Raashi_Khanna/', answer: 'raashi khanna', aliases: ['rashi', 'raashi', 'rashi khanna'] },
+            { folder: '../database/Kollywood_faces/Krithi_Shetty/', answer: 'krithi shetty', aliases: ['krithi', 'shetty'] },
+            { folder: '../database/Kollywood_faces/Meena/', answer: 'meena', aliases: ['meena'] },
+            { folder: '../database/Kollywood_faces/Khushbu_Sundar/', answer: 'khushbu sundar', aliases: ['khushbu', 'khushboo', 'sundar'] },
+            { folder: '../database/Kollywood_faces/Sneha/', answer: 'sneha', aliases: ['sneha'] },
+            { folder: '../database/Kollywood_faces/Priyamani/', answer: 'priyamani', aliases: ['priya', 'priyamani'] },
+            { folder: '../database/Kollywood_faces/Shruti_Haasan/', answer: 'shruti haasan', aliases: ['shruti', 'haasan'] },
+            { folder: '../database/Kollywood_faces/Madonna_Sebastian/', answer: 'madonna sebastian', aliases: ['madonna', 'sebastian'] },
+            { folder: '../database/Kollywood_faces/Catherine_Tresa/', answer: 'catherine tresa', aliases: ['catherine', 'tresa'] },
+            { folder: '../database/Kollywood_faces/Shriya_Saran/', answer: 'shriya saran', aliases: ['shriya', 'saran'] },
+            { folder: '../database/Kollywood_faces/Ileana_DCruz/', answer: "ileana d'cruz", aliases: ['ileana', 'dcruz', "d'cruz"] },
+            { folder: '../database/Kollywood_faces/Kajal_Aggarwal/', answer: 'kajal aggarwal', aliases: ['kajal', 'aggarwal'] },
+            { folder: '../database/Kollywood_faces/Divyabharathi/', answer: 'divyabharathi', aliases: ['divyabharathi', 'divya'] },
+            { folder: '../database/Kollywood_faces/Ramya_Krishnan/', answer: 'ramya krishnan', aliases: ['ramya', 'krishnan'] },
+            { folder: '../database/Kollywood_faces/Amy_Jackson/', answer: 'amy jackson', aliases: ['amy', 'jackson'] },
+        ];
+
+        window.addEventListener('keydown', function (e) {
+            if (['Space', 'Tab'].includes(e.code)) {
+                if (e.target.tagName !== 'INPUT') { e.preventDefault(); }
+            }
+            if (currentlyListening !== null) {
+                e.preventDefault();
+                playersData[currentlyListening].key = e.code;
+                const btn = document.getElementById(`key-btn-${currentlyListening}`);
+                btn.innerText = `Buzzer: ${e.code}`;
+                btn.classList.remove('listening');
+                currentlyListening = null;
+                return;
+            }
+
+            if (gameActive) {
+                for (let i = 0; i < playersData.length; i++) {
+                    if (e.code === playersData[i].key) {
+                        e.preventDefault();
+                        buzzerPressed(playersData[i], i);
+                        return;
+                    }
+                }
+            }
+        }, { passive: false });
+
+        // Input ബോക്സിൽ Enter അടിച്ചാൽ ഉത്തരം സബ്മിറ്റ് ആവാനുള്ള ലിസണർ
+        document.getElementById('guess-input').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkAnswer();
+            }
+        });
+
+        function getEditDistance(a, b) {
+            if (a.length === 0) return b.length;
+            if (b.length === 0) return a.length;
+            const matrix = [];
+            for (let i = 0; i <= b.length; i++) { matrix[i] = [i]; }
+            for (let j = 0; j <= a.length; j++) { matrix[0][j] = j; }
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                        matrix[i][j] = matrix[i - 1][j - 1];
+                    } else {
+                        matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, matrix[i][j - 1] + 1, matrix[i - 1][j] + 1);
+                    }
+                }
+            }
+            return matrix[b.length][a.length];
+        }
+
+        function setupPlayers(count) {
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'block';
+            const playersList = document.getElementById('players-list');
+            playersList.innerHTML = '';
+            playersData = [];
+            for (let i = 0; i < count; i++) {
+                playersData.push({ name: `Player ${i + 1}`, key: defaultKeys[i], score: 0 });
+                playersList.innerHTML += `
+                    <div class="player-row">
+                        <input type="text" id="name-${i}" value="Player ${i + 1}" placeholder="Enter Name">
+                        <button id="key-btn-${i}" class="btn key-btn" onclick="listenForKey(${i})">
+                            Buzzer: ${displayKeys[i]}
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function listenForKey(index) {
+            if (currentlyListening !== null) {
+                document.getElementById(`key-btn-${currentlyListening}`).classList.remove('listening');
+            }
+            currentlyListening = index;
+            const btn = document.getElementById(`key-btn-${index}`);
+            btn.innerText = "Press any key...";
+            btn.classList.add('listening');
+        }
+
+        function updateScoreboard() {
+            const board = document.getElementById('scoreboard');
+            board.innerHTML = '';
+            playersData.forEach((p, index) => {
+                board.innerHTML += `<div class="score-card" id="score-${index}">${p.name}: <span>${p.score}</span></div>`;
+            });
+        }
+
+        function beginCountdown() {
+            document.getElementById('page-splash').style.display = 'block';
+            let count = 3;
+            const countdownEl = document.getElementById('countdown-number');
+            countdownEl.innerText = count;
+            safePlay(soundBuzzer);
+
+            const interval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownEl.innerText = count;
+                    safePlay(soundBuzzer);
+                } else if (count === 0) {
+                    countdownEl.innerText = "GO! 🚀";
+                    safePlay(soundCheer);
+                } else {
+                    clearInterval(interval);
+                    document.getElementById('page-splash').style.display = 'none';
+                    document.getElementById('page-game').style.display = 'block';
+                    updateScoreboard();
+                    loadNextActor();
+                }
+            }, 1000);
+        }
+
+        function buildQuizData() {
+            let combinedData = [];
+            if (document.getElementById('mollywood-cb').checked) {
+                combinedData = combinedData.concat(mollywoodData);
+            }
+            if (document.getElementById('kollywood-cb').checked) {
+                combinedData = combinedData.concat(kollywoodData);
+            }
+            return combinedData;
+        }
+
+        function setupNewGame(selectedData) {
+            let playedActors = JSON.parse(localStorage.getItem('quizPlayedMemory')) || [];
+            let availableData = selectedData.filter(actor => !playedActors.includes(actor.folder));
+
+            if (availableData.length < TOTAL_ROUNDS) {
+                playedActors = [];
+                availableData = [...selectedData];
+            }
+
+            availableData.sort(() => Math.random() - 0.5);
+            quizData = availableData.slice(0, TOTAL_ROUNDS);
+
+            quizData.forEach(actor => playedActors.push(actor.folder));
+            localStorage.setItem('quizPlayedMemory', JSON.stringify(playedActors));
+
+            currentActorIndex = 0;
+        }
+
+        function startSplash() {
+            let selectedData = buildQuizData();
+            if (selectedData.length === 0) {
+                alert("Da Mone ! You must select at least one category to play. 😅");
+                return;
+            }
+
+            for (let i = 0; i < playersData.length; i++) {
+                playersData[i].name = document.getElementById(`name-${i}`).value || `Player ${i + 1}`;
+            }
+            document.getElementById('page2').style.display = 'none';
+
+            setupNewGame(selectedData);
+            beginCountdown();
+        }
+
+        function restartGame() {
+            playersData.forEach(p => p.score = 0);
+            let selectedData = buildQuizData();
+            setupNewGame(selectedData);
+
+            document.getElementById('page-end').style.display = 'none';
+            beginCountdown();
+        }
+
+        function loadNextActor() {
+            if (currentActorIndex >= quizData.length) {
+                endGame();
+                return;
+            }
+
+            clearInterval(answerTimer);
+            clearInterval(nextRoundTimer);
+            activePlayer = null;
+            document.getElementById('timer-display').style.display = 'none';
+            document.getElementById('next-timer-display').style.display = 'none';
+
+            const currentFolder = quizData[currentActorIndex].folder;
+
+            let imageNumbers = [];
+            for (let i = 1; i <= MAX_IMAGES_IN_FOLDER; i++) {
+                imageNumbers.push(i);
+            }
+            imageNumbers.sort(() => Math.random() - 0.5);
+
+            let numIndex = 0;
+
+            function tryLoadImage() {
+                if (numIndex >= imageNumbers.length) {
+                    showImageOnScreen(currentFolder + 'Image_ (1)_eyes.jpg', currentFolder + 'Image_ (1).jpg');
+                    return;
+                }
+
+                let num = imageNumbers[numIndex];
+                const formats = [
+                    `Image_  (${num})`,
+                    `Image_ (${num})`,
+                    `Image_(${num})`,
+                    `Image_${num}`
+                ];
+
+                let formatIndex = 0;
+
+                function attemptFormat() {
+                    if (formatIndex >= formats.length) {
+                        numIndex++;
+                        tryLoadImage();
+                        return;
+                    }
+
+                    let currentFormat = formats[formatIndex];
+                    let eyesPath = currentFolder + currentFormat + '_eyes.jpg';
+                    let origPath = currentFolder + currentFormat + '.jpg';
+
+                    let imgTester = new Image();
+                    imgTester.onload = function () {
+                        showImageOnScreen(eyesPath, origPath);
+                    };
+                    imgTester.onerror = function () {
+                        formatIndex++;
+                        attemptFormat();
+                    };
+                    imgTester.src = eyesPath;
+                }
+
+                attemptFormat();
+            }
+
+            tryLoadImage();
+        }
+
+        function showImageOnScreen(eyesPath, originalPath) {
+            quizData[currentActorIndex].currentImg = originalPath;
+
+            document.getElementById('image-container').classList.remove('correct', 'shake-effect');
+            document.getElementById('actor-image').src = eyesPath;
+
+            document.getElementById('question-title').innerText = `Round ${currentActorIndex + 1} of ${quizData.length}`;
+            document.getElementById('buzzer-message').innerHTML = "Ready on the buzzer! ⚡";
+            document.getElementById('buzzer-message').style.color = "#f1c40f";
+
+            document.getElementById('answer-section').style.display = 'none';
+            document.getElementById('guess-input').style.display = 'inline-block';
+            document.getElementById('submit-btn').style.display = 'inline-block';
+            document.getElementById('guess-input').value = "";
+
+            document.querySelectorAll('.score-card').forEach(card => card.classList.remove('active'));
+
+            gameActive = true;
+        }
+
+        function buzzerPressed(player, index) {
+            gameActive = false;
+            activePlayer = player;
+            safePlay(soundBuzzer);
+
+            try {
+                soundHeartbeat.currentTime = 0;
+                soundHeartbeat.play();
+            } catch (e) { }
+
+            document.getElementById(`score-${index}`).classList.add('active');
+
+            document.getElementById('buzzer-message').innerHTML = `🔥 <b>${player.name}</b> buzzed!`;
+            document.getElementById('buzzer-message').style.color = "#e94560";
+
+            document.getElementById('answer-section').style.display = 'block';
+            document.getElementById('guess-input').value = "";
+            document.getElementById('guess-input').focus();
+
+            timeLeft = ANSWER_TIME_LIMIT;
+            const timerDisplay = document.getElementById('timer-display');
+            timerDisplay.innerText = `⏳ Time Left: ${timeLeft}s`;
+            timerDisplay.style.display = 'block';
+
+            clearInterval(answerTimer);
+            answerTimer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = `⏳ Time Left: ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(answerTimer);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function startNextRoundCountdown() {
+            nextTimeLeft = NEXT_ROUND_DELAY;
+            const nextTimerDisplay = document.getElementById('next-timer-display');
+            nextTimerDisplay.innerHTML = `<span style="color: #cbd5e1;">Next star arriving in </span> <span style="color: #f1c40f; font-size: 26px;">${nextTimeLeft}s</span> ⏳`;
+            nextTimerDisplay.style.display = 'block';
+
+            clearInterval(nextRoundTimer);
+            nextRoundTimer = setInterval(() => {
+                nextTimeLeft--;
+                nextTimerDisplay.innerHTML = `<span style="color: #cbd5e1;">Next star arriving in </span> <span style="color: #f1c40f; font-size: 26px;">${nextTimeLeft}s</span> ⏳`;
+
+                if (nextTimeLeft <= 0) {
+                    clearInterval(nextRoundTimer);
+                    nextRound();
+                }
+            }, 1000);
+        }
+
+        function handleTimeout() {
+            try { soundHeartbeat.pause(); } catch (e) { }
+
+            const currentItem = quizData[currentActorIndex];
+            const actualAnswer = currentItem.answer.toLowerCase();
+            const imageBox = document.getElementById('image-container');
+
+            safePlay(soundWrong);
+            if (activePlayer) {
+                activePlayer.score -= MINUS_MARK;
+            }
+            updateScoreboard();
+
+            let displayAnswer = actualAnswer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+            document.getElementById('buzzer-message').innerHTML = `⏰ Time Out! <b><span style="color:#e74c3c;">-${MINUS_MARK} Points!</span></b> Right Answer: <b style="color:#fff;">${displayAnswer}</b> 🥲`;
+            document.getElementById('buzzer-message').style.color = "#e74c3c";
+
+            imageBox.classList.add('shake-effect');
+            setTimeout(() => imageBox.classList.remove('shake-effect'), 500);
+
+            if (currentItem.currentImg) {
+                document.getElementById('actor-image').src = currentItem.currentImg;
+            }
+
+            document.getElementById('timer-display').style.display = 'none';
+            document.getElementById('guess-input').style.display = 'none';
+            document.getElementById('submit-btn').style.display = 'none';
+
+            startNextRoundCountdown();
+        }
+
+        function checkAnswer() {
+            clearInterval(answerTimer);
+            try { soundHeartbeat.pause(); } catch (e) { }
+
+            document.getElementById('timer-display').style.display = 'none';
+
+            const rawGuess = document.getElementById('guess-input').value.toLowerCase().trim();
+            const guessClean = rawGuess.replace(/[^a-z0-9]/g, '');
+            const guessWords = rawGuess.split(/\s+/);
+
+            const currentItem = quizData[currentActorIndex];
+            const actualAnswer = currentItem.answer.toLowerCase();
+            const aliases = currentItem.aliases || [];
+            const imageBox = document.getElementById('image-container');
+
+            let isCorrect = false;
+
+            if (guessClean !== "") {
+                const allAcceptableAnswers = [actualAnswer, ...aliases];
+
+                for (let validAnswer of allAcceptableAnswers) {
+                    const validClean = validAnswer.replace(/[^a-z0-9]/g, '');
+
+                    if (guessClean === validClean) {
+                        isCorrect = true; break;
+                    }
+                    if (guessClean.length >= 3 && validClean.includes(guessClean)) {
+                        isCorrect = true; break;
+                    }
+                    let maxTypos = validClean.length > 7 ? 3 : 2;
+                    if (getEditDistance(guessClean, validClean) <= maxTypos) {
+                        isCorrect = true; break;
+                    }
+                    let validWords = validAnswer.split(/\s+/);
+                    for (let gWord of guessWords) {
+                        if (gWord.length < 3) continue;
+                        for (let vWord of validWords) {
+                            let wordTypos = vWord.length > 5 ? 2 : 1;
+                            if (getEditDistance(gWord, vWord) <= wordTypos || vWord.includes(gWord)) {
+                                isCorrect = true; break;
+                            }
+                        }
+                        if (isCorrect) break;
+                    }
+                    if (isCorrect) break;
+                }
+            }
+
+            if (isCorrect) {
+                safePlay(soundClap);
+                if (activePlayer) activePlayer.score += PLUS_MARK;
+                updateScoreboard();
+
+                document.getElementById('buzzer-message').innerHTML = `SUPER! <b>${activePlayer ? activePlayer.name : 'Player'}</b> right answer ✅ 🥳`;
+                document.getElementById('buzzer-message').style.color = "#2ecc71";
+                imageBox.classList.add('correct');
+
+                // Confetti crash ആവാതിരിക്കാനുള്ള safe check
+                if (typeof confetti === 'function') {
+                    try {
+                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                    } catch (e) { }
+                }
+            } else {
+                safePlay(soundWrong);
+                if (activePlayer) activePlayer.score -= MINUS_MARK;
+                updateScoreboard();
+
+                let displayAnswer = actualAnswer.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+                document.getElementById('buzzer-message').innerHTML = `Wrong Answer! <b><span style="color:#e74c3c;">-${MINUS_MARK} Points!</span></b> Right Answer: <b style="color:#fff;">${displayAnswer}</b> 🥲`;
+                document.getElementById('buzzer-message').style.color = "#e74c3c";
+
+                imageBox.classList.add('shake-effect');
+                setTimeout(() => imageBox.classList.remove('shake-effect'), 500);
+            }
+
+            if (currentItem.currentImg) {
+                document.getElementById('actor-image').src = currentItem.currentImg;
+            }
+
+            document.getElementById('guess-input').style.display = 'none';
+            document.getElementById('submit-btn').style.display = 'none';
+
+            startNextRoundCountdown();
+        }
+
+        function nextRound() {
+            currentActorIndex++;
+            loadNextActor();
+        }
+
+        // ==========================================
+        // 🌌 PREMIUM 3D BACKGROUND
+        // ==========================================
+        // The quiz UI stays untouched; this module only creates the animated backdrop.
+        // It uses Three.js from the current stable CDN release and gracefully falls back
+        // to the existing CSS background if WebGL cannot be initialized.
+        // ==========================================
+        (function initPremium3DBackground() {
+            const canvas = document.getElementById('scene3d');
+            if (!canvas) return;
+
+            const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            const loadScene = async () => {
+                try {
+                    const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js');
+
+                    const scene = new THREE.Scene();
+                    scene.fog = new THREE.FogExp2(0x070a14, 0.032);
+
+                    const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 120);
+                    camera.position.set(0, 0.45, 17);
+
+                    const renderer = new THREE.WebGLRenderer({
+                        canvas,
+                        alpha: true,
+                        antialias: true,
+                        powerPreference: 'high-performance'
+                    });
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.innerWidth < 700 ? 1.25 : 1.6));
+                    renderer.setSize(window.innerWidth, window.innerHeight, false);
+                    renderer.outputColorSpace = THREE.SRGBColorSpace;
+                    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                    renderer.toneMappingExposure = 1.08;
+
+                    const root = new THREE.Group();
+                    scene.add(root);
+
+                    // Soft floating light clusters create the depth and "video" feel.
+                    const glowGeometry = new THREE.SphereGeometry(0.65, 32, 32);
+                    const glowMaterials = [
+                        new THREE.MeshBasicMaterial({ color: 0xf1c40f, transparent: true, opacity: 0.055 }),
+                        new THREE.MeshBasicMaterial({ color: 0xe94560, transparent: true, opacity: 0.05 }),
+                        new THREE.MeshBasicMaterial({ color: 0x3498db, transparent: true, opacity: 0.045 })
+                    ];
+
+                    const glows = [
+                        { x: -7.2, y: 3.5, z: -8, s: 5.4, m: 0 },
+                        { x: 7.4, y: 2.0, z: -10, s: 6.3, m: 1 },
+                        { x: 0.5, y: -4.5, z: -7, s: 5.8, m: 2 }
+                    ].map(cfg => {
+                        const mesh = new THREE.Mesh(glowGeometry, glowMaterials[cfg.m]);
+                        mesh.position.set(cfg.x, cfg.y, cfg.z);
+                        mesh.scale.setScalar(cfg.s);
+                        scene.add(mesh);
+                        return mesh;
+                    });
+
+                    // Premium low-poly hero forms.
+                    const formGroup = new THREE.Group();
+                    formGroup.position.set(2.5, 0.15, -2.5);
+                    root.add(formGroup);
+
+                    const torusKnot = new THREE.Mesh(
+                        new THREE.TorusKnotGeometry(2.15, 0.26, 180, 28, 2, 3),
+                        new THREE.MeshPhysicalMaterial({
+                            color: 0xf1c40f,
+                            metalness: 0.8,
+                            roughness: 0.24,
+                            transparent: true,
+                            opacity: 0.18,
+                            clearcoat: 1,
+                            clearcoatRoughness: 0.15
+                        })
+                    );
+                    formGroup.add(torusKnot);
+
+                    const torusWire = new THREE.Mesh(
+                        new THREE.TorusKnotGeometry(2.42, 0.055, 120, 12, 2, 3),
+                        new THREE.MeshBasicMaterial({
+                            color: 0xe94560,
+                            wireframe: true,
+                            transparent: true,
+                            opacity: 0.34
+                        })
+                    );
+                    formGroup.add(torusWire);
+
+                    const orb = new THREE.Mesh(
+                        new THREE.IcosahedronGeometry(1.65, 2),
+                        new THREE.MeshPhysicalMaterial({
+                            color: 0x8b5cf6,
+                            metalness: 0.35,
+                            roughness: 0.18,
+                            transparent: true,
+                            opacity: 0.12,
+                            clearcoat: 1
+                        })
+                    );
+                    orb.position.set(-5.7, -1.3, -3.8);
+                    orb.scale.set(1.05, 1.05, 1.05);
+                    root.add(orb);
+
+                    const orbWire = new THREE.Mesh(
+                        new THREE.IcosahedronGeometry(1.8, 2),
+                        new THREE.MeshBasicMaterial({ color: 0x6ee7f9, wireframe: true, transparent: true, opacity: 0.2 })
+                    );
+                    orbWire.position.copy(orb.position);
+                    root.add(orbWire);
+
+                    const ring = new THREE.Mesh(
+                        new THREE.TorusGeometry(4.15, 0.032, 16, 180),
+                        new THREE.MeshBasicMaterial({ color: 0x67e8f9, transparent: true, opacity: 0.18 })
+                    );
+                    ring.rotation.x = Math.PI * 0.38;
+                    ring.rotation.y = -Math.PI * 0.2;
+                    ring.position.set(-2.2, 2.2, -5.8);
+                    root.add(ring);
+
+                    // Star / dust field with genuine 3D positions.
+                    const lowPower = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || window.innerWidth < 700;
+                    const particleCount = lowPower ? 900 : 1800;
+                    const particlePositions = new Float32Array(particleCount * 3);
+                    const particleSeeds = new Float32Array(particleCount * 2);
+
+                    for (let i = 0; i < particleCount; i++) {
+                        const radius = THREE.MathUtils.randFloat(10, 34);
+                        const theta = Math.random() * Math.PI * 2;
+                        const phi = Math.acos(THREE.MathUtils.randFloatSpread(2));
+                        const offset = i * 3;
+                        particlePositions[offset] = Math.sin(phi) * Math.cos(theta) * radius;
+                        particlePositions[offset + 1] = Math.cos(phi) * radius * 0.58;
+                        particlePositions[offset + 2] = Math.sin(phi) * Math.sin(theta) * radius - 2;
+                        particleSeeds[i * 2] = Math.random() * Math.PI * 2;
+                        particleSeeds[i * 2 + 1] = THREE.MathUtils.randFloat(0.35, 1.25);
+                    }
+
+                    const particleGeometry = new THREE.BufferGeometry();
+                    particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+                    const particleMaterial = new THREE.PointsMaterial({
+                        color: 0xf8fafc,
+                        size: lowPower ? 0.06 : 0.075,
+                        transparent: true,
+                        opacity: 0.5,
+                        depthWrite: false,
+                        blending: THREE.AdditiveBlending,
+                        sizeAttenuation: true
+                    });
+                    const particles = new THREE.Points(particleGeometry, particleMaterial);
+                    scene.add(particles);
+
+                    // Flow lines: animated through a shallow 3D wave.
+                    const waveLineGroup = new THREE.Group();
+                    waveLineGroup.position.z = -8;
+                    root.add(waveLineGroup);
+
+                    const waveLines = [];
+                    for (let lineIndex = 0; lineIndex < 3; lineIndex++) {
+                        const count = lowPower ? 90 : 140;
+                        const positions = new Float32Array(count * 3);
+                        const geometry = new THREE.BufferGeometry();
+                        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                        const material = new THREE.LineBasicMaterial({
+                            color: [0xf1c40f, 0xe94560, 0x38bdf8][lineIndex],
+                            transparent: true,
+                            opacity: 0.18 - lineIndex * 0.025,
+                            blending: THREE.AdditiveBlending
+                        });
+                        const line = new THREE.Line(geometry, material);
+                        line.userData = { count, amplitude: 0.5 + lineIndex * 0.12, phase: lineIndex * 1.7 };
+                        waveLineGroup.add(line);
+                        waveLines.push(line);
+                    }
+
+                    // Subtle directional lighting for the physical materials.
+                    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+                    const keyLight = new THREE.DirectionalLight(0xffffff, 1.25);
+                    keyLight.position.set(5, 7, 8);
+                    scene.add(keyLight);
+                    const fillLight = new THREE.PointLight(0xe94560, 18, 30, 2);
+                    fillLight.position.set(-8, 2, 2);
+                    scene.add(fillLight);
+                    const rimLight = new THREE.PointLight(0x3498db, 16, 28, 2);
+                    rimLight.position.set(7, -3, -4);
+                    scene.add(rimLight);
+
+                    const pointer = { x: 0, y: 0 };
+                    const targetPointer = { x: 0, y: 0 };
+                    let resizeTimer;
+
+                    const onPointerMove = (event) => {
+                        const x = (event.clientX / window.innerWidth) * 2 - 1;
+                        const y = (event.clientY / window.innerHeight) * 2 - 1;
+                        targetPointer.x = x * 0.6;
+                        targetPointer.y = y * 0.35;
+                    };
+
+                    const onResize = () => {
+                        window.clearTimeout(resizeTimer);
+                        resizeTimer = window.setTimeout(() => {
+                            camera.aspect = window.innerWidth / window.innerHeight;
+                            camera.updateProjectionMatrix();
+                            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.innerWidth < 700 ? 1.25 : 1.6));
+                            renderer.setSize(window.innerWidth, window.innerHeight, false);
+                        }, 80);
+                    };
+
+                    window.addEventListener('pointermove', onPointerMove, { passive: true });
+                    window.addEventListener('resize', onResize, { passive: true });
+
+                    const clock = new THREE.Clock();
+                    let frameId = 0;
+
+                    const render = () => {
+                        frameId = requestAnimationFrame(render);
+                        const elapsed = clock.getElapsedTime();
+                        const motionScale = prefersReducedMotion ? 0.18 : 1;
+
+                        pointer.x += (targetPointer.x - pointer.x) * 0.025;
+                        pointer.y += (targetPointer.y - pointer.y) * 0.025;
+
+                        // Slow cinematic camera drift gives a video-like parallax effect.
+                        camera.position.x += ((Math.sin(elapsed * 0.18) * 1.2 + pointer.x) - camera.position.x) * 0.018 * motionScale;
+                        camera.position.y += ((0.45 + Math.cos(elapsed * 0.15) * 0.7 - pointer.y) - camera.position.y) * 0.018 * motionScale;
+                        camera.lookAt(0, 0, -2.6);
+
+                        root.rotation.y = elapsed * 0.045 * motionScale + pointer.x * 0.04;
+                        root.rotation.x = Math.sin(elapsed * 0.12) * 0.035 * motionScale;
+
+                        torusKnot.rotation.x += 0.0018 * motionScale;
+                        torusKnot.rotation.y += 0.0032 * motionScale;
+                        torusWire.rotation.x -= 0.0011 * motionScale;
+                        torusWire.rotation.z += 0.0019 * motionScale;
+
+                        orb.rotation.y -= 0.0022 * motionScale;
+                        orb.rotation.x += 0.0011 * motionScale;
+                        orbWire.rotation.y += 0.0017 * motionScale;
+
+                        ring.rotation.z += 0.0007 * motionScale;
+                        ring.position.y = 2.2 + Math.sin(elapsed * 0.22) * 0.35 * motionScale;
+
+                        glows[0].position.x = -7.2 + Math.sin(elapsed * 0.17) * 1.2 * motionScale;
+                        glows[0].position.y = 3.5 + Math.cos(elapsed * 0.19) * 0.9 * motionScale;
+                        glows[1].position.x = 7.4 + Math.cos(elapsed * 0.13) * 1.1 * motionScale;
+                        glows[1].position.y = 2.0 + Math.sin(elapsed * 0.16) * 0.8 * motionScale;
+                        glows[2].position.x = 0.5 + Math.sin(elapsed * 0.11) * 1.4 * motionScale;
+                        glows[2].position.y = -4.5 + Math.cos(elapsed * 0.14) * 0.7 * motionScale;
+
+                        particles.rotation.y = elapsed * 0.006 * motionScale;
+                        particles.rotation.x = Math.sin(elapsed * 0.08) * 0.045 * motionScale;
+
+                        waveLines.forEach((line, lineIndex) => {
+                            const attr = line.geometry.attributes.position;
+                            const { count, amplitude, phase } = line.userData;
+                            for (let i = 0; i < count; i++) {
+                                const t = i / (count - 1);
+                                const x = (t - 0.5) * 42;
+                                const z = -0.6 + Math.sin(t * Math.PI * 4 + elapsed * 0.18 + phase) * 1.6;
+                                const y = (lineIndex - 1) * 2.1 + Math.sin(t * Math.PI * 5 - elapsed * 0.25 + phase) * amplitude;
+                                attr.setXYZ(i, x, y, z);
+                            }
+                            attr.needsUpdate = true;
+                        });
+
+                        renderer.render(scene, camera);
+                    };
+
+                    render();
+
+                    window.addEventListener('pagehide', () => {
+                        cancelAnimationFrame(frameId);
+                        window.removeEventListener('pointermove', onPointerMove);
+                        window.removeEventListener('resize', onResize);
+                        renderer.dispose();
+                        particleGeometry.dispose();
+                        particleMaterial.dispose();
+                        glowGeometry.dispose();
+                        glowMaterials.forEach(material => material.dispose());
+                    }, { once: true });
+                } catch (error) {
+                    console.warn('3D background unavailable. Using the built-in CSS background instead.', error);
+                    canvas.style.display = 'none';
+                }
+            };
+
+            // Respect reduced-motion users while retaining the visual backdrop.
+            loadScene();
+        }());
+
+        function endGame() {
+            document.getElementById('page-game').style.display = 'none';
+            document.getElementById('page-end').style.display = 'block';
+            safePlay(soundCheer);
+
+            if (typeof confetti === 'function') {
+                var duration = 3 * 1000;
+                var end = Date.now() + duration;
+                (function frame() {
+                    try {
+                        confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#e94560', '#f1c40f'] });
+                        confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#2ecc71', '#3498db'] });
+                        if (Date.now() < end) { requestAnimationFrame(frame); }
+                    } catch (e) { }
+                }());
+            }
+
+            const sortedPlayers = [...playersData].sort((a, b) => b.score - a.score);
+
+            const board = document.getElementById('winner-board');
+            board.innerHTML = '';
+            sortedPlayers.forEach((p, index) => {
+                let medal = index === 0 ? '👑' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : '👏'));
+                board.innerHTML += `
+                    <div class="winner-row">
+                        <span>${medal} ${p.name}</span>
+                        <span>${p.score} Pts</span>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+
+</html>
