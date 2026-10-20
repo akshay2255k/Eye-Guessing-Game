@@ -2228,6 +2228,476 @@
         }
 
         /* =========================================================
+           PREMIUM GAME UI — distinct, tactile button styles + live settings
+        ========================================================= */
+        button,
+        .btn {
+            transform-style: preserve-3d;
+            transition: transform .22s cubic-bezier(.2,.8,.2,1),
+                        box-shadow .22s ease, border-color .22s ease,
+                        filter .22s ease, background .22s ease;
+        }
+
+        button:not(:disabled):hover {
+            filter: brightness(1.07);
+        }
+
+        button:not(:disabled):active {
+            filter: brightness(.98);
+        }
+
+        /* Live settings dashboard */
+        .lobby-settings-panel {
+            margin: 18px 0 20px;
+            padding: 17px;
+            text-align: left;
+            border: 1px solid color-mix(in srgb, var(--cyan) 23%, var(--border));
+            border-radius: 22px;
+            background:
+                radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--cyan) 9%, transparent), transparent 55%),
+                linear-gradient(145deg, rgba(12, 20, 42, .92), rgba(21, 27, 52, .72));
+            box-shadow: inset 0 1px rgba(255,255,255,.05), 0 18px 38px rgba(0,0,0,.17);
+        }
+
+        .lobby-settings-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0 0 13px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1.8px;
+            color: var(--text);
+        }
+
+        .settings-live-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 9px;
+            border: 1px solid rgba(94, 227, 170, .22);
+            border-radius: 999px;
+            background: rgba(94, 227, 170, .075);
+            color: var(--green);
+            font-size: 9px;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .settings-live-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            flex: 0 0 7px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 11px color-mix(in srgb, var(--green) 70%, transparent);
+            animation: roomLivePulse 1.8s ease-in-out infinite;
+        }
+
+        .lobby-settings-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            perspective: 900px;
+        }
+
+        .lobby-setting-card {
+            --setting-accent: var(--cyan);
+            position: relative;
+            isolation: isolate;
+            display: flex;
+            min-width: 0;
+            min-height: 145px;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 5px;
+            overflow: hidden;
+            padding: 13px 11px 12px;
+            border: 1px solid color-mix(in srgb, var(--setting-accent) 27%, var(--border));
+            border-radius: 17px;
+            background: linear-gradient(150deg,
+                color-mix(in srgb, var(--setting-accent) 11%, rgba(13,20,42,.96)),
+                rgba(12,17,35,.94) 72%);
+            box-shadow: 0 7px 0 rgba(0,0,0,.2), 0 14px 24px rgba(0,0,0,.12), inset 0 1px rgba(255,255,255,.07);
+            transform: translateZ(0);
+            animation: settingCardGlow 4.8s ease-in-out infinite;
+            transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease,
+                        border-color .28s ease, background .28s ease;
+        }
+
+        .lobby-setting-card::before {
+            position: absolute;
+            z-index: -1;
+            content: "";
+            width: 95px;
+            height: 95px;
+            top: -48px;
+            right: -40px;
+            border-radius: 50%;
+            background: var(--setting-accent);
+            opacity: .11;
+            filter: blur(3px);
+            transition: transform .35s ease, opacity .35s ease;
+        }
+
+        .lobby-setting-card:hover {
+            z-index: 2;
+            transform: translateY(-7px) rotateX(3deg) scale(1.025);
+            border-color: color-mix(in srgb, var(--setting-accent) 70%, white);
+            background: linear-gradient(150deg,
+                color-mix(in srgb, var(--setting-accent) 19%, rgba(13,20,42,.98)),
+                rgba(12,17,35,.98) 72%);
+            box-shadow: 0 12px 0 rgba(0,0,0,.18), 0 22px 34px color-mix(in srgb, var(--setting-accent) 17%, transparent),
+                        inset 0 1px rgba(255,255,255,.12);
+            animation-play-state: paused;
+        }
+
+        .lobby-setting-card:hover::before {
+            transform: scale(1.65);
+            opacity: .2;
+        }
+
+        .time-setting { --setting-accent: var(--purple); animation-delay: -.8s; }
+        .correct-setting { --setting-accent: var(--green); animation-delay: -1.6s; }
+        .wrong-setting { --setting-accent: var(--red); animation-delay: -2.4s; }
+
+        .setting-icon {
+            display: grid;
+            width: 31px;
+            height: 31px;
+            margin-bottom: 3px;
+            place-items: center;
+            border: 1px solid color-mix(in srgb, var(--setting-accent) 34%, transparent);
+            border-radius: 10px;
+            background: color-mix(in srgb, var(--setting-accent) 12%, transparent);
+            font-size: 15px;
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--setting-accent) 10%, transparent);
+        }
+
+        .setting-kicker {
+            color: var(--muted);
+            font-size: 8px;
+            line-height: 1.35;
+            font-weight: 900;
+            letter-spacing: 1.05px;
+        }
+
+        .lobby-setting-card strong {
+            display: block;
+            color: var(--setting-accent);
+            font-size: clamp(23px, 3.2vw, 31px);
+            line-height: 1.12;
+            font-weight: 950;
+            letter-spacing: -.8px;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 18px color-mix(in srgb, var(--setting-accent) 22%, transparent);
+        }
+
+        .lobby-setting-card .setting-unit {
+            margin-left: 2px;
+            font-size: .54em;
+            letter-spacing: 0;
+        }
+
+        .lobby-setting-card small {
+            margin-top: auto;
+            color: color-mix(in srgb, var(--muted) 90%, white);
+            font-size: 9px;
+            line-height: 1.3;
+        }
+
+        .lobby-settings-footnote {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 650;
+        }
+
+        @keyframes roomLivePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .55; transform: scale(.78); }
+        }
+
+        @keyframes settingCardGlow {
+            0%, 100% { box-shadow: 0 7px 0 rgba(0,0,0,.2), 0 14px 24px rgba(0,0,0,.12), inset 0 1px rgba(255,255,255,.07); }
+            50% { box-shadow: 0 7px 0 rgba(0,0,0,.2), 0 14px 28px color-mix(in srgb, var(--setting-accent) 8%, transparent), inset 0 1px rgba(255,255,255,.08); }
+        }
+
+        /* Home mode tiles: glass edges + deep 3D press */
+        .mode-action-btn {
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 7px 0 rgba(0,0,0,.22), 0 13px 25px rgba(0,0,0,.16), inset 0 1px rgba(255,255,255,.13);
+        }
+        .mode-action-btn::after,
+        .form-card > .btn.primary::after,
+        #host-start-btn::after,
+        #submit-btn::after,
+        #play-again-btn::after {
+            position: absolute;
+            content: "";
+            inset: 0 auto 0 -140%;
+            width: 70%;
+            pointer-events: none;
+            transform: skewX(-20deg);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+            transition: left .55s ease;
+        }
+        .mode-action-btn:hover::after,
+        .form-card > .btn.primary:hover::after,
+        #host-start-btn:hover::after,
+        #submit-btn:hover::after,
+        #play-again-btn:hover::after { left: 150%; }
+
+        .mode-action-btn.create-mode {
+            box-shadow: 0 7px 0 #3a769b, 0 16px 28px rgba(56,189,248,.2), inset 0 1px rgba(255,255,255,.45);
+        }
+        .mode-action-btn.create-mode:hover:not(:disabled) {
+            transform: translateY(-5px) rotateX(2deg);
+            box-shadow: 0 11px 0 #3a769b, 0 23px 34px rgba(56,189,248,.27), inset 0 1px rgba(255,255,255,.5);
+        }
+        .mode-action-btn.join-mode {
+            box-shadow: 0 7px 0 #352d69, 0 14px 26px rgba(167,139,250,.13), inset 0 1px rgba(255,255,255,.1);
+        }
+        .mode-action-btn.join-mode:hover:not(:disabled) {
+            transform: translateY(-5px) rotateY(-1deg);
+            box-shadow: 0 11px 0 #352d69, 0 20px 31px rgba(167,139,250,.2);
+        }
+        .mode-action-btn.play-mode {
+            box-shadow: 0 7px 0 #155e48, 0 14px 26px rgba(94,227,170,.12), inset 0 1px rgba(255,255,255,.1);
+        }
+        .mode-action-btn.play-mode:hover:not(:disabled) {
+            transform: translateY(-5px) rotateY(1deg);
+            box-shadow: 0 11px 0 #155e48, 0 20px 31px rgba(94,227,170,.2);
+        }
+
+        /* Create / join: bright arcade launch buttons */
+        .form-card > .btn.primary {
+            position: relative;
+            overflow: hidden;
+            justify-content: center;
+            min-height: 54px;
+            color: #071629;
+            border: 1px solid rgba(255,255,255,.35);
+            border-radius: 15px;
+            background: linear-gradient(125deg, #67e8f9 0%, #a78bfa 100%);
+            box-shadow: 0 6px 0 #394775, 0 12px 23px rgba(103,232,249,.16), inset 0 1px rgba(255,255,255,.5);
+        }
+        .form-card > .btn.primary:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 0 #394775, 0 19px 30px rgba(103,232,249,.25), inset 0 1px rgba(255,255,255,.6);
+        }
+        .form-card > .btn.primary:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 #394775; }
+
+        .copy-room-code-btn {
+            color: #dffaff;
+            border: 1px solid rgba(103,232,249,.4);
+            background: linear-gradient(145deg, #183e62, #15213e);
+            box-shadow: 0 4px 0 #0b1529, 0 8px 15px rgba(0,0,0,.2), inset 0 1px rgba(255,255,255,.12);
+        }
+        .copy-room-code-btn:hover:not(:disabled) {
+            transform: translateY(-3px) rotateX(5deg);
+            border-color: var(--cyan);
+            box-shadow: 0 7px 0 #0b1529, 0 13px 24px rgba(103,232,249,.16);
+        }
+        .copy-room-code-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 #0b1529; }
+
+        /* Joiner readiness button and host start button are deliberately different */
+        .ready-toggle-btn {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            overflow: hidden;
+            box-shadow: 0 7px 0 #4c1730, 0 14px 26px rgba(255,75,114,.18), inset 0 2px 0 rgba(255,255,255,.25);
+        }
+        .ready-toggle-btn small { font-size: 10px; font-weight: 700; letter-spacing: .15px; opacity: .82; }
+        .ready-toggle-btn.state-not-ready {
+            color: #fff;
+            background: linear-gradient(135deg, #fb7185, #be123c 68%, #881337);
+        }
+        .ready-toggle-btn.state-not-ready:hover:not(:disabled) {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 11px 0 #4c1730, 0 20px 30px rgba(255,75,114,.28), inset 0 2px 0 rgba(255,255,255,.3);
+        }
+        .ready-toggle-btn.state-ready {
+            color: #042b1d;
+            background: linear-gradient(135deg, #86efac, #10b981 74%, #047857);
+            box-shadow: 0 7px 0 #064e3b, 0 14px 26px rgba(16,185,129,.2), inset 0 2px 0 rgba(255,255,255,.3);
+        }
+        .ready-toggle-btn.state-ready:hover:not(:disabled) {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 11px 0 #064e3b, 0 20px 30px rgba(16,185,129,.28), inset 0 2px 0 rgba(255,255,255,.35);
+        }
+
+        #host-start-btn.host-start-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 13px;
+            overflow: hidden;
+            color: #221300;
+            border: 1px solid rgba(255,244,190,.7);
+            border-radius: 17px;
+            background: linear-gradient(115deg, #fde68a, #fbbf24 52%, #f97316);
+            box-shadow: 0 7px 0 #854d0e, 0 16px 30px rgba(251,191,36,.22), inset 0 2px 0 rgba(255,255,255,.6);
+            font-weight: 950;
+            letter-spacing: 1.2px;
+            text-shadow: 0 1px rgba(255,255,255,.23);
+            animation: startMatchGlow 2.8s ease-in-out infinite;
+        }
+        #host-start-btn:hover:not(:disabled) {
+            transform: translateY(-5px) scale(1.012);
+            box-shadow: 0 12px 0 #854d0e, 0 24px 38px rgba(251,191,36,.34), inset 0 2px 0 rgba(255,255,255,.68);
+        }
+        #host-start-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 #854d0e; }
+        #host-start-btn:disabled {
+            opacity: .62;
+            filter: saturate(.68);
+            cursor: not-allowed;
+            animation: none;
+            box-shadow: 0 5px 0 #6b4d20, inset 0 1px rgba(255,255,255,.3);
+        }
+        @keyframes startMatchGlow {
+            0%, 100% { box-shadow: 0 7px 0 #854d0e, 0 14px 25px rgba(251,191,36,.15), inset 0 2px 0 rgba(255,255,255,.6); }
+            50% { box-shadow: 0 7px 0 #854d0e, 0 18px 34px rgba(251,191,36,.29), inset 0 2px 0 rgba(255,255,255,.68); }
+        }
+
+        /* Back buttons are cool-toned, recessed console controls */
+        .setup-actions > button:not(.primary),
+        #page-lobby > .setup-actions > button,
+        #page2 > .setup-actions > button,
+        #page-end .setup-actions > button:not(.primary) {
+            border-color: rgba(148,163,184,.24);
+            color: #d7e2f5;
+            background: linear-gradient(145deg, rgba(43,56,83,.95), rgba(21,30,51,.98));
+            box-shadow: 0 4px 0 #0b1120, 0 8px 17px rgba(0,0,0,.2), inset 0 1px rgba(255,255,255,.08);
+        }
+        .setup-actions > button:not(.primary):hover:not(:disabled),
+        #page-lobby > .setup-actions > button:hover:not(:disabled),
+        #page2 > .setup-actions > button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            border-color: rgba(148,163,184,.48);
+            box-shadow: 0 7px 0 #0b1120, 0 13px 22px rgba(0,0,0,.3);
+        }
+
+        /* Local player selector: compact arcade tiles */
+        .btn-group .player-count {
+            border-radius: 13px;
+            color: #d9e5ff;
+            border-color: rgba(129,157,205,.24);
+            background: linear-gradient(145deg, rgba(41,54,84,.88), rgba(17,25,46,.95));
+            box-shadow: 0 4px 0 #0b1325, inset 0 1px rgba(255,255,255,.07);
+        }
+        .btn-group .player-count:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 7px 0 #0b1325, 0 10px 18px rgba(0,0,0,.23); }
+        .btn-group .player-count.active-count {
+            color: #071629;
+            background: linear-gradient(135deg, var(--cyan), #a5b4fc);
+            box-shadow: 0 4px 0 #496b9b, 0 8px 18px color-mix(in srgb, var(--cyan) 17%, transparent), inset 0 1px rgba(255,255,255,.55);
+        }
+        .btn-group .player-count.active-count:hover:not(:disabled) { box-shadow: 0 7px 0 #496b9b, 0 13px 22px color-mix(in srgb, var(--cyan) 21%, transparent); }
+
+        /* Unique action treatments across gameplay controls */
+        .big-buzzer-btn:not(:disabled):hover {
+            transform: translateY(-4px) scale(1.012);
+            box-shadow: 0 16px 0 #0c2461, 0 25px 42px rgba(56,189,248,.4), inset 0 3px 7px rgba(255,255,255,.5);
+        }
+        .voice-mic-btn {
+            box-shadow: 0 5px 0 color-mix(in srgb, var(--purple) 55%, #111827), 0 10px 20px rgba(103,232,249,.16), inset 0 1px rgba(255,255,255,.45);
+        }
+        .voice-mic-btn:hover:not(:disabled) { transform: translateY(-3px) rotate(-4deg); box-shadow: 0 8px 0 color-mix(in srgb, var(--purple) 55%, #111827), 0 15px 25px rgba(103,232,249,.24); }
+        #submit-btn {
+            position: relative;
+            overflow: hidden;
+            color: #06261d;
+            background: linear-gradient(120deg, #86efac, #2dd4bf);
+            box-shadow: 0 5px 0 #16634b, 0 11px 22px rgba(45,212,191,.15), inset 0 1px rgba(255,255,255,.55);
+        }
+        #submit-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 0 #16634b, 0 16px 26px rgba(45,212,191,.25); }
+        #submit-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 #16634b; }
+        #skip-round-btn {
+            color: #fff1d4;
+            border-color: rgba(251,146,60,.42);
+            background: linear-gradient(135deg, rgba(154,72,28,.9), rgba(88,42,31,.96));
+            box-shadow: 0 4px 0 #4c241e, 0 8px 18px rgba(249,115,22,.11), inset 0 1px rgba(255,255,255,.1);
+        }
+        #skip-round-btn:hover:not(:disabled) { transform: translateY(-3px) rotate(-1deg); box-shadow: 0 7px 0 #4c241e, 0 14px 23px rgba(249,115,22,.18); }
+        #play-again-btn {
+            position: relative;
+            overflow: hidden;
+            color: #160d32;
+            background: linear-gradient(120deg, #c4b5fd, #f0abfc 55%, #f9a8d4);
+            box-shadow: 0 5px 0 #65448b, 0 12px 24px rgba(192,132,252,.2), inset 0 1px rgba(255,255,255,.56);
+        }
+        #play-again-btn:hover:not(:disabled) { transform: translateY(-4px) rotate(1deg); box-shadow: 0 9px 0 #65448b, 0 18px 30px rgba(192,132,252,.28); }
+
+        .buzzer-chip-btn {
+            box-shadow: 0 4px 0 rgba(7,17,34,.9), 0 8px 14px rgba(0,0,0,.16), inset 0 1px rgba(255,255,255,.09);
+        }
+        .buzzer-chip-btn:hover:not(:disabled) { transform: translateY(-3px); border-color: var(--cyan); box-shadow: 0 7px 0 rgba(7,17,34,.9), 0 13px 20px rgba(103,232,249,.14); }
+        .buzzer-chip-btn.active-buzz { box-shadow: 0 4px 0 #12533f, 0 0 21px rgba(94,227,170,.27), inset 0 1px rgba(255,255,255,.14); }
+
+        .top-actions #soundButton {
+            color: var(--cyan);
+            border-color: color-mix(in srgb, var(--cyan) 35%, var(--border));
+            background: radial-gradient(circle at 50% 0%, rgba(103,232,249,.15), rgba(14,22,43,.96));
+            box-shadow: 0 4px 0 #070d1d, 0 8px 15px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.1);
+        }
+        .top-actions #soundButton:hover:not(:disabled) { transform: translateY(-3px) rotate(-5deg); box-shadow: 0 7px 0 #070d1d, 0 12px 20px rgba(103,232,249,.12); }
+        .top-actions #settingsButton {
+            border-color: rgba(167,139,250,.32);
+            background: linear-gradient(145deg, rgba(48,39,88,.94), rgba(20,24,49,.98));
+            box-shadow: 0 4px 0 #0c1023, 0 8px 15px rgba(0,0,0,.2), inset 0 1px rgba(255,255,255,.1);
+        }
+        .top-actions #settingsButton:hover:not(:disabled) { transform: translateY(-3px); border-color: var(--purple); box-shadow: 0 7px 0 #0c1023, 0 12px 20px rgba(167,139,250,.16); }
+        #closeSettings {
+            color: #fecdd3;
+            border-color: rgba(251,113,133,.25);
+            background: rgba(190,24,93,.13);
+        }
+        #closeSettings:hover:not(:disabled) { transform: rotate(90deg); background: rgba(190,24,93,.24); }
+        #resetSettings {
+            color: #e0e7ff;
+            border-style: dashed;
+            border-color: rgba(148,163,184,.32);
+            background: linear-gradient(145deg, rgba(35,47,72,.9), rgba(18,27,47,.98));
+        }
+        #resetSettings:hover:not(:disabled) { transform: translateY(-2px) rotate(-1deg); border-color: var(--cyan); }
+        .reset-stars-btn {
+            color: #ffe6a5;
+            border-color: rgba(252,216,132,.45);
+            background: linear-gradient(135deg, rgba(132,85,19,.34), rgba(56,42,28,.78));
+            box-shadow: 0 4px 0 #49351a, inset 0 1px rgba(255,255,255,.12);
+        }
+        .reset-stars-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 7px 0 #49351a, 0 12px 20px rgba(252,216,132,.13); }
+
+        @media (max-width: 700px) {
+            .lobby-settings-panel { padding: 13px; }
+            .lobby-settings-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+            .lobby-setting-card { min-height: 128px; padding: 12px; }
+            .lobby-setting-card strong { font-size: 28px; }
+            .setting-kicker { font-size: 9px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .settings-live-dot,
+            .lobby-setting-card,
+            #host-start-btn { animation: none !important; }
+            button, .btn, .lobby-setting-card { transition-duration: .01ms !important; }
+        }
+
+        /* =========================================================
            MOBILE RESPONSIVE LAYOUT OVERRIDES
         ========================================================= */
         @media (max-width: 900px) {
@@ -2490,8 +2960,43 @@
             <div class="room-code-banner">
                 <small>SHARE THIS ROOM CODE WITH FRIENDS</small>
                 <div class="room-code-digits" id="lobby-room-code">-----</div>
-                <button class="btn" type="button" onclick="copyRoomCode()" style="min-height:34px; padding:6px 12px; font-size:12px;">📋 Copy Code</button>
+                <button class="btn copy-room-code-btn" type="button" onclick="copyRoomCode()" style="min-height:34px; padding:6px 12px; font-size:12px;">📋 Copy Code</button>
             </div>
+
+            <!-- Live room settings: synced from Firebase for everyone in the room -->
+            <section class="lobby-settings-panel" aria-label="Live room settings" aria-live="polite" aria-atomic="true">
+                <div class="lobby-settings-heading">
+                    <span>⚙ MATCH SETTINGS</span>
+                    <span class="settings-live-tag"><span class="settings-live-dot"></span> LIVE SYNC</span>
+                </div>
+                <div class="lobby-settings-grid">
+                    <article class="lobby-setting-card rounds-setting">
+                        <span class="setting-icon" aria-hidden="true">🎯</span>
+                        <span class="setting-kicker">ROUNDS</span>
+                        <strong id="lobby-setting-rounds">20</strong>
+                        <small>Match length</small>
+                    </article>
+                    <article class="lobby-setting-card time-setting">
+                        <span class="setting-icon" aria-hidden="true">⏱️</span>
+                        <span class="setting-kicker">ANSWER TIME</span>
+                        <strong id="lobby-setting-time">25<span class="setting-unit">s</span></strong>
+                        <small>Per question</small>
+                    </article>
+                    <article class="lobby-setting-card correct-setting">
+                        <span class="setting-icon" aria-hidden="true">✅</span>
+                        <span class="setting-kicker">CORRECT</span>
+                        <strong id="lobby-setting-correct">+10</strong>
+                        <small>Points earned</small>
+                    </article>
+                    <article class="lobby-setting-card wrong-setting">
+                        <span class="setting-icon" aria-hidden="true">❌</span>
+                        <span class="setting-kicker">WRONG</span>
+                        <strong id="lobby-setting-wrong">−7</strong>
+                        <small>Points penalty</small>
+                    </article>
+                </div>
+                <div class="lobby-settings-footnote"><span class="settings-live-dot"></span> Room host settings update here live</div>
+            </section>
 
             <div class="lobby-players-box">
                 <div class="lobby-players-header">
@@ -2501,14 +3006,14 @@
                 <div id="lobby-players-list" class="lobby-player-list"></div>
             </div>
 
-            <!-- Ready / Not Ready Toggle Button (For Players & Host) -->
-            <button id="lobby-ready-btn" class="ready-toggle-btn state-not-ready" type="button" onclick="toggleMyReadyStatus()">
+            <!-- Only joining players get a Ready toggle. The host has Start Game instead. -->
+            <button id="lobby-ready-btn" class="ready-toggle-btn state-not-ready" type="button" onclick="toggleMyReadyStatus()" style="display:none;">
                 NOT READY ❌ (Tap when ready)
             </button>
 
-            <!-- Start Game Button (Visible only to Host when min 2 players and all are Ready) -->
-            <button id="host-start-btn" class="btn primary" type="button" onclick="hostStartMultiplayerGame()" style="display:none; width:100%; min-height:56px; margin-top:12px; font-size:16px;">
-                🚀 Start Game Now!
+            <!-- Always visible to host; enabled once 2+ players joined and every guest is ready. -->
+            <button id="host-start-btn" class="btn primary host-start-btn" type="button" onclick="hostStartMultiplayerGame()" style="display:none; width:100%; min-height:56px; margin-top:12px; font-size:16px;">
+                🚀 START MATCH <span aria-hidden="true">→</span>
             </button>
             <p id="host-wait-hint" class="muted" style="font-size:12px; margin-top:10px;"></p>
         </div>
@@ -3307,7 +3812,7 @@
             }
 
             myPlayerName = hostName;
-            myReadyState = false;
+            myReadyState = true;
             isMultiplayer = true;
             isRoomHost = true;
 
@@ -3320,7 +3825,7 @@
                 id: myPlayerId,
                 name: myPlayerName,
                 isHost: true,
-                ready: false,
+                ready: true,
                 score: 0,
                 correct: 0,
                 wrong: 0,
@@ -3353,7 +3858,9 @@
                 document.getElementById('lobby-heading').textContent = 'Room Lobby (Host)';
                 document.getElementById('lobby-subtext').textContent = 'You can customize game rules in Settings ⚙ at the top.';
                 document.getElementById('lobby-room-code').textContent = code;
-                updateMyReadyButtonUI(false);
+                document.getElementById('lobby-ready-btn').style.display = 'none';
+                document.getElementById('host-start-btn').style.display = 'inline-flex';
+                updateLobbySettingsCards(gameSettings);
 
                 subscribeToRoom(code);
                 showToast(`Room ${code} created! Share the code with friends.`);
@@ -3416,9 +3923,12 @@
                 document.getElementById('join-form-box').style.display = 'none';
                 document.getElementById('active-room-box').style.display = 'block';
                 document.getElementById('lobby-heading').textContent = 'Room Lobby';
-                document.getElementById('lobby-subtext').textContent = 'Tap READY below so the host can start the game.';
+                document.getElementById('lobby-subtext').textContent = 'Check the live room rules below, then mark yourself ready.';
                 document.getElementById('lobby-room-code').textContent = code;
+                document.getElementById('lobby-ready-btn').style.display = 'block';
+                document.getElementById('host-start-btn').style.display = 'none';
                 updateMyReadyButtonUI(false);
+                updateLobbySettingsCards(roomData.settings || DEFAULT_GAME_SETTINGS);
 
                 subscribeToRoom(code);
                 showToast(`Joined Room ${code}!`);
@@ -3438,22 +3948,41 @@
 
         function updateMyReadyButtonUI(isReady) {
             const btn = document.getElementById('lobby-ready-btn');
-            if (!btn) return;
+            if (!btn || isRoomHost) return;
+            btn.style.display = 'block';
             if (isReady) {
                 btn.className = 'ready-toggle-btn state-ready';
-                btn.textContent = 'READY ✅ (Tap to set Not Ready)';
+                btn.innerHTML = 'READY <span aria-hidden="true">✓</span><small>Tap to switch back</small>';
             } else {
                 btn.className = 'ready-toggle-btn state-not-ready';
-                btn.textContent = 'NOT READY ❌ (Tap when ready)';
+                btn.innerHTML = "MARK READY <span aria-hidden=\"true\">→</span><small>Tap when you are ready</small>";
             }
         }
 
         function toggleMyReadyStatus() {
-            if (!currentRoomCode || !db) return;
+            // Host is always considered ready; host's only lobby action is Start Match.
+            if (isRoomHost || !currentRoomCode || !db) return;
             playTone('click');
             myReadyState = !myReadyState;
             updateMyReadyButtonUI(myReadyState);
             db.ref(`rooms/${currentRoomCode}/players/${myPlayerId}/ready`).set(myReadyState);
+        }
+
+        function updateLobbySettingsCards(settings) {
+            const data = sanitizeSettings(settings || DEFAULT_GAME_SETTINGS);
+            const values = {
+                'lobby-setting-rounds': String(data.rounds),
+                'lobby-setting-time': `${data.time}<span class="setting-unit">s</span>`,
+                'lobby-setting-correct': `+${data.correct}`,
+                'lobby-setting-wrong': `−${data.wrong}`
+            };
+            Object.entries(values).forEach(([id, value]) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (id === 'lobby-setting-time') el.innerHTML = value;
+                    else el.textContent = value;
+                }
+            });
         }
 
         function subscribeToRoom(code) {
@@ -3469,6 +3998,7 @@
                 if (room.settings) {
                     sessionSettings = sanitizeSettings(room.settings);
                     updateRuleLabels(sessionSettings);
+                    updateLobbySettingsCards(sessionSettings);
                 }
 
                 // Convert players map to sorted array
@@ -3515,6 +4045,7 @@
             const listEl = document.getElementById('lobby-players-list');
             const countEl = document.getElementById('lobby-player-count-text');
             const startBtn = document.getElementById('host-start-btn');
+            const readyBtn = document.getElementById('lobby-ready-btn');
             const waitHint = document.getElementById('host-wait-hint');
 
             if (countEl) countEl.textContent = `PLAYERS JOINED (${pList.length})`;
@@ -3522,45 +4053,46 @@
 
             listEl.innerHTML = '';
             pList.forEach(p => {
-                const isReady = Boolean(p.ready);
+                // Host is auto-ready; only guests need to mark themselves ready.
+                const isReady = Boolean(p.isHost) || Boolean(p.ready);
                 const hostBadge = p.isHost ? ' <small style="color:var(--yellow);">(Host)</small>' : '';
                 const meBadge = p.id === myPlayerId ? ' <small style="color:var(--cyan);">(You)</small>' : '';
                 const item = document.createElement('div');
                 item.className = `lobby-player-item ${isReady ? 'is-ready' : 'not-ready'}`;
+                const statusText = p.isHost ? 'HOST 👑' : isReady ? 'READY ✓' : 'NOT READY';
                 item.innerHTML = `
                     <span>👤 ${escapeHTML(p.name)}${hostBadge}${meBadge}</span>
-                    <span class="status-pill ${isReady ? 'ready' : 'unready'}">
-                        ${isReady ? 'READY ✅' : 'NOT READY ❌'}
-                    </span>
+                    <span class="status-pill ${isReady ? 'ready' : 'unready'}">${statusText}</span>
                 `;
                 listEl.appendChild(item);
             });
 
             const minTwoPlayers = pList.length >= 2;
-            const allPlayersReady = pList.length > 0 && pList.every(p => Boolean(p.ready));
+            const guests = pList.filter(p => !p.isHost);
+            const allGuestsReady = guests.length > 0 && guests.every(p => Boolean(p.ready));
 
             if (isRoomHost) {
-                if (minTwoPlayers && allPlayersReady) {
+                if (readyBtn) readyBtn.style.display = 'none';
+                if (startBtn) {
                     startBtn.style.display = 'inline-flex';
-                    startBtn.disabled = false;
-                    waitHint.textContent = 'All players are ready! Tap Start Game to begin.';
+                    startBtn.disabled = !(minTwoPlayers && allGuestsReady);
+                }
+                if (!minTwoPlayers) {
+                    waitHint.textContent = 'Waiting for at least one more player to join…';
+                } else if (!allGuestsReady) {
+                    waitHint.textContent = 'Waiting for joined players to mark themselves READY.';
                 } else {
-                    startBtn.style.display = 'none';
-                    startBtn.disabled = true;
-                    if (!minTwoPlayers) {
-                        waitHint.textContent = 'Waiting for at least 2 players to join the room...';
-                    } else {
-                        waitHint.textContent = 'Waiting for all joined players to tap READY ✅...';
-                    }
+                    waitHint.textContent = 'All set. Start the match when you are ready!';
                 }
             } else {
-                startBtn.style.display = 'none';
+                if (readyBtn) readyBtn.style.display = 'block';
+                if (startBtn) startBtn.style.display = 'none';
                 if (!minTwoPlayers) {
-                    waitHint.textContent = 'Waiting for more players to join (minimum 2)...';
-                } else if (!allPlayersReady) {
-                    waitHint.textContent = 'Waiting for everyone to mark READY ✅...';
+                    waitHint.textContent = 'Waiting for more players to join (minimum 2)…';
+                } else if (!allGuestsReady) {
+                    waitHint.textContent = 'Mark yourself READY and wait for the others.';
                 } else {
-                    waitHint.textContent = 'All players ready! Waiting for Host to start the match...';
+                    waitHint.textContent = 'Players are ready. Waiting for the host to start the match…';
                 }
             }
         }
@@ -3591,8 +4123,9 @@
                 showToast("Need at least 2 players to start!");
                 return;
             }
-            if (!pList.every(p => Boolean(p.ready))) {
-                showToast("All players must be READY ✅ before starting!");
+            const guestsReady = pList.filter(p => !p.isHost).every(p => Boolean(p.ready));
+            if (!guestsReady || !pList.some(p => !p.isHost)) {
+                showToast("Wait for at least one joined player and for every guest to mark READY.");
                 return;
             }
 
@@ -5122,6 +5655,7 @@
             try { localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(gameSettings)); } catch (e) { }
             applyTheme(gameSettings.theme);
             updateRuleLabels(gameSettings);
+            updateLobbySettingsCards(gameSettings);
 
             // If Host is in a live room lobby, push updated settings to Firebase room
             if (isMultiplayer && isRoomHost && currentRoomCode && db) {
