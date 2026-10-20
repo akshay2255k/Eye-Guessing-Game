@@ -5,9 +5,8 @@ import time
 
 # ================= CONFIG =================
 actors = [
-    "anikha surendran",
-    # "Kamal Haasan",
-    # "Vijay",
+    "Rukmini Vasanth",
+    "Krithi Shetty",
 ]
 
 SAVE_DIR = "Tollywood_faces"
@@ -44,7 +43,6 @@ for person in actors:
         f"{person} face closeup",
         f"{person} portrait",
         f"{person} actor face",
-        f"{person} nude",
     ]
 
     for query in queries:
