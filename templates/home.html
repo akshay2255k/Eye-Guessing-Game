@@ -2568,6 +2568,12 @@
             .result-stats {
                 grid-template-columns: 1fr;
             }
+
+        }
+        .center-logo img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
         }
     </style>
 </head>
@@ -2588,7 +2594,7 @@
                 <span id="brandFallbackIcon">◈</span>
             </div>
             <div>MOLLYWOOD <span class="brand-separator">×</span> KOLLYWOOD
-                <small>THE EYE RECOGNITION CHALLENGE</small>
+                <small>THE EYE RECOGNITION GAME</small>
             </div>
         </a>
         <div class="top-actions">
@@ -2603,7 +2609,7 @@
         <div class="hero-copy">
             <div class="eyebrow">OBSERVE · BUZZ · WIN</div>
             <h1>Know the eyes.<br><span class="gradient-text">Name the star.</span></h1>
-            <p class="hero-description">A fast-paced South Indian cinema face challenge. Recognise the eyes, buzz first,
+            <p class="hero-description">Recognise the eyes, buzz first,
                 and type the actor’s name before time runs out.</p>
 
             <div id="start-rules" class="pills" aria-label="Current game settings"></div>
@@ -2646,7 +2652,7 @@
             <div class="preview-orbit orbit-one"></div>
             <div class="preview-orbit orbit-two"></div>
             <div class="preview-card">
-                <span>🎬</span>
+                <span class="center-logo"><img src="../icons/LOGO.png" alt="logo"></span>
                 <small>GUESS · BUZZ · WIN</small>
                 <div class="preview-line"></div>
                 <strong id="previewRoundsText">20 ROUNDS</strong>
@@ -3945,7 +3951,7 @@
                     countdownEl.innerText = count;
                     safePlay(soundBuzzer);
                 } else if (count === 0) {
-                    countdownEl.innerText = "GO! 🚀";
+                    countdownEl.innerText = "GO!";
                     safePlay(soundCheer);
                 } else {
                     clearInterval(interval);
